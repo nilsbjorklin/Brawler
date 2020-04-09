@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:orderBy="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Calendar</title>
+
+    <link rel="stylesheet" th:href="@{css/fullcalendar.css}"/>
+    <link rel="stylesheet" th:href="@{css/calendarCSS.css}"/>
+    <link rel="stylesheet" th:href="@{vendor/bootstrap/css/bootstrap.css}"/>
+    <link rel="stylesheet" th:href="@{vendor/fontawesome-free/css/all.css}"/>
+
+    <link href="https://fonts.googleapis.com/css?family=Saira+Extra+Condensed:500,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Muli:400,400i,800,800i" rel="stylesheet">
+
+
+</head>
+<body>
+
+<div id="calendar"></div>
+
+
+<script th:src="@{vendor/jquery/jquery.min.js}"></script>
+<script th:src="@{js/moment.min.js}"></script>
+
+<script th:src="@{vendor/jquery-easing/jquery.easing.js}"></script>
+<script th:src="@{vendor/bootstrap/js/bootstrap.bundle.js}"></script>
+<script th:src="@{js/fullcalendar.min.js}"></script>
+<script th:src="@{js/sv.js}"></script>
+
+
+<script>
+    $(document).ready(function(){
+
+
+        $('#calendar').fullCalendar({
+            themeSystem: 'bootstrap4',
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'month,agendaWeek,agendaDay,listMonth'
+
+            },
+            locale: 'sv',
+            weekNumbers: true,
+            eventLimit: true,
+            events: 'https://fullcalendar.io/demo-events.json'
+
+
+        });
+
+
+    });
+
+</script>
+
+</body>
+</html>

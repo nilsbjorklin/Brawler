@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>.:Jolly Junk:.</title>
+    <link rel="stylesheet" th:href="@{vendor/bootstrap/css/bootstrap.css}"/>
+    <link rel="stylesheet" th:href="@{vendor/fontawesome-free/css/all.css}"/>
+    <link rel="stylesheet" th:href="@{css/main.css}"/>
+    <link href="https://fonts.googleapis.com/css?family=Saira+Extra+Condensed:500,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Muli:400,400i,800,800i" rel="stylesheet">
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var apitokenpapi = /*[[${apitokenpapi}]]*/ null;
+        /*]]>*/
+    </script>
+</head>
+<body class="override" id="page-top" ng-app="addressAPI" ng-controller="addressSearch" style="padding: 0">
+<div style="background-image: url('../images/bubblegum.jpg'); background-size: cover; background-repeat: no-repeat; background-position: top center; padding:0; height: 100%;">
+    <section class="resume-section p-3 p-lg-5 d-flex d-column" id="home" style="margin: auto; height: 100%">
+        <div class="container">
+            <div id="id01" class="modal" style="background-color: rgba(0, 0, 0, 0.3)">
+                <!-- Login-Popup-innehåll -->
+                <form class="modal-content animate" th:action="@{login}" method="post"
+                      style="max-width: 600px; margin: auto; padding-top: 20px;">
+                    <div class="imgcontainer">
+                        <img src="images/yellowlogo.svg" alt="Avatar" class="avatar">
+                    </div>
+                    <div class="container">
+                        <label><b>E-post</b></label>
+                        <input type="text" placeholder="Fyll i din e-postadress" name="email" required>
+                        <label><b>Lösenord</b></label>
+                        <input type="password" placeholder="Fyll i ditt lösenord" name="password" required>
+                        <button class="override"
+                                style="background-color:rgb(228,214,71); border-radius: 15px;"
+                                type="submit">Logga in
+                        </button>
+                    </div>
+                    <div class="container" style="background-color:#f1f1f1">
+                        <button type="button" onclick="document.getElementById('id01').style.display='none'"
+                                class="override"
+                                style="background-color:rgb(210,114,101); border-radius: 15px;">
+                            Avbryt
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+
+            <!-- När "login" klickas öppnas login-popup -->
+            <div class="row" style="height: 5%;">
+                <div class="col-md-10">
+                    <div th:class="${isError}">
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        <p style="margin-bottom: 0;" th:text="${errormessage}"></p>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <button onclick="document.getElementById('id01').style.display='block'" class="override"
+                            style="background-color:rgb(228,214,71); border-radius: 15px;">
+                        Logga in
+                    </button>
+                </div>
+            </div>
+            <div class="row" style="min-height: 30vw">
+            </div>
+            <div class="row" style="height: 25%;">
+                <div class="col-md-4">
+                    <h1 class="mb-0" style="color: white">Jolly</h1>
+                    <h1 class="mb-0" style="color: white">Junk</h1>
+                </div>
+                <div class="col-md-8">
+                    <a class="btn btn-custom" id="registerlink" href="#register">ÄR MIN ADRESS ANSLUTEN?</a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</div>
+<hr class="m-0">
+<div style="padding:0; height: 100%;">
+    <!--GATUSÖKFUNKTION-->
+    <section class="resume-section p-3 p-lg-5 d-flex flex-column" id="register" style="height: 100%; margin:auto">
+        <div class="container">
+            <a class="nav-link js-scroll-trigger" href="#home"></a>
+
+            <div class="container">
+                <div class="row" style="height: 5%;">
+                    <div class="col-md-10" style="padding: 0">
+                        <h2 class="mb-5">Missa aldrig en tömning igen!</h2>
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                </div>
+                <div class="row">
+                    <h4>Ta reda på om Jolly Junk har stenkoll på din gata:</h4>
+                    <br>
+                    <input type="text" placeholder="Gatunamn" ng-model="street"
+                           ng-keydown="$event.keyCode === 13 && search()"
+                           required>
+                    <button type="submit" ng-click="search()" class="override"
+                            style="background-color:rgb(228,214,71); border-radius: 15px;">
+                        Sök
+                    </button>
+
+                    <!--REGISTRERINGSFORMULÄR-->
+                    <form th:action="@{/register}" method="post" style="border: 0px;" name="registrationForm">
+                        <div ng-show="showscrolllist">
+                            <select name="address"
+                                    style="width: auto; min-width: 90%; -webkit-appearance: none; -moz-appearance: none; appearance: none;"
+                                    required>
+
+                                <option href="#" class="active" ng-repeat="item in list | orderBy:'city'"
+                                        value="{{item.street+'/'+item.city +'/'+item.zipcode}}">
+                                    {{item.city}} | {{item.zipcode}} | {{ item.street }}
+                                </option>
+                            </select>
+                            <input type="text" placeholder="NR" name="streetnumber" required
+                                   style="display: inline; min-width: 9%; max-width: 4em; float: right">
+                            <input type="text" placeholder="Förnamn" name="firstname" required>
+                            <input type="text" placeholder="Efternamn" name="lastname" required>
+                            <input type="email" placeholder="E-postadress" name="email" ng-model="email" required>
+                            <div ng-if="!!registrationForm.email.$touched && !!registrationForm.email.$invalid">
+                                <small style="color: red;">Eposten ska skrivas in enligt användarnamn@domän.topdomän
+                                </small>
+                            </div>
+                            <p>Önskar även SMS-avisering <input type="checkbox" id="myCheck" onclick="myFunction()">
+                            </p>
+
+                            <p id="inputField" style="display:none"><input type="text" placeholder="XXX-XXXXXXX"
+                                                                           name="cellphone"></p>
+                            <input type="password" placeholder="Lösenord" name="password" ng-model="password"
+                                   required>
+                            <div ng-if="!!registrationForm.password.$touched && !!registrationForm.password.$invalid">
+                                <small style="color: red;">Lösenordet bör bestå av minst 8 tecken</small>
+                            </div>
+                            <span><input type="checkbox" id="checkedIfOK"
+                                         required> Jag godkänner <a href="#bannerformmodal" data-toggle="modal"
+                                                                    data-target="#bannerformmodal">användarvillkoren.</a></span>
+                            <div class="modal fade bannerformmodal" tabindex="-1" role="dialog"
+                                 aria-labelledby="bannerformmodal" aria-hidden="true" id="bannerformmodal">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content" style="padding: 20px;">
+                                        <h2>Välkommen till Jolly Junk! <img src="images/yellowlogocenter.svg"
+                                                                            height="130px" width="130px"
+                                                                            style=" margin-left:50px;"></h2>
+                                        <p>Tack för att du använder våra produkter och tjänster ("Tjänster").
+                                            Tjänsterna
+                                            tillhandahålls av Jolly Junk AB ("Jolly Junk").</p>
+
+                                        <p>Genom att använda våra Tjänster accepterar du dessa villkor. Läs igenom
+                                            dem
+                                            noggrant.</p>
+
+                                        <p>Vi erbjuder många olika typer av Tjänster, så ibland kan ytterligare
+                                            villkor
+                                            eller produktkrav gälla (inklusive åldersgränser). Ytterligare villkor
+                                            tillhandahålls i anslutning till de relevanta Tjänsterna, och dessa
+                                            ytterligare villkor blir en del av ditt avtal med oss om du använder
+                                            Tjänsterna ifråga.
+                                        </p>
+
+                                        <h3>Användning av våra Tjänster</h3>
+                                        <p>Du måste följa alla policyer som du får tillgång till via Tjänsterna.</p>
+
+                                        <p> Missbruka inte våra Tjänster. Du får till exempel inte störa våra
+                                            Tjänster
+                                            eller försöka komma åt dem med en annan metod än gränssnittet och
+                                            anvisningarna som vi tillhandahåller. Du får endast använda våra
+                                            Tjänster i
+                                            enlighet med gällande lagstiftning, inklusive tillämpliga lagar och
+                                            regler
+                                            avseende export och återexport. Vi kan stänga av eller upphöra att
+                                            tillhandahålla dig våra Tjänster om du inte uppfyller våra villkor eller
+                                            policyer eller om vi utreder misstänkta oegentligheter.
+                                        </p>
+                                        <p> Genom att använda våra Tjänster förvärvar du ingen immateriell
+                                            äganderätt
+                                            till våra Tjänster eller det innehåll som du kommer åt. Du får inte
+                                            använda
+                                            innehåll från våra Tjänster om du inte inhämtar tillstånd från
+                                            innehållsägaren, eller på annat sätt har rätt att använda det enligt
+                                            lag.
+                                            Dessa villkor ger dig inte rätt att använda några varumärken eller
+                                            logotyper
+                                            som används i våra Tjänster. Du får inte ta bort, dölja eller ändra
+                                            några
+                                            juridiska meddelanden som visas i eller i samband med våra Tjänster.
+                                        </p>
+                                        <p> Genom att använda våra Tjänster förvärvar du ingen immateriell
+                                            äganderätt
+                                            till våra Tjänster eller det innehåll som du kommer åt. Du får inte
+                                            använda
+                                            innehåll från våra Tjänster om du inte inhämtar tillstånd från
+                                            innehållsägaren, eller på annat sätt har rätt att använda det enligt
+                                            lag.
+                                            Dessa villkor ger dig inte rätt att använda några varumärken eller
+                                            logotyper
+                                            som används i våra Tjänster. Du får inte ta bort, dölja eller ändra
+                                            några
+                                            juridiska meddelanden som visas i eller i samband med våra Tjänster.
+                                            En del innehåll som inte tillhör Jolly Junk visas i våra Tjänster.
+                                            Ansvaret
+                                            för detta innehåll vilar helt på det företag som gör det tillgängligt.
+                                            Vi
+                                            kan granska innehåll för att avgöra om det är olagligt eller strider mot
+                                            våra policyer och ta bort eller vägra att visa innehåll som vi skäligen
+                                            anser strida mot våra policyer eller lagen. Det innebär inte
+                                            nödvändigtvis
+                                            att vi granskar innehåll, så utgå inte från att vi gör det.
+                                        </p>
+                                        <p> Genom att använda våra Tjänster förvärvar du ingen immateriell
+                                            äganderätt
+                                            till våra Tjänster eller det innehåll som du kommer åt. Du får inte
+                                            använda
+                                            innehåll från våra Tjänster om du inte inhämtar tillstånd från
+                                            innehållsägaren, eller på annat sätt har rätt att använda det enligt
+                                            lag.
+                                            Dessa villkor ger dig inte rätt att använda några varumärken eller
+                                            logotyper
+                                            som används i våra Tjänster. Du får inte ta bort, dölja eller ändra
+                                            några
+                                            juridiska meddelanden som visas i eller i samband med våra Tjänster.
+                                            I samband med din användning av Tjänsterna kan vi skicka meddelanden om
+                                            tjänster, administrativa meddelanden och annan information till dig. Du
+                                            kan
+                                            välja bort vissa typer av sådan kommunikation.</p>
+                                        </p>
+                                        <p> Genom att använda våra Tjänster förvärvar du ingen immateriell
+                                            äganderätt
+                                            till våra Tjänster eller det innehåll som du kommer åt. Du får inte
+                                            använda
+                                            innehåll från våra Tjänster om du inte inhämtar tillstånd från
+                                            innehållsägaren, eller på annat sätt har rätt att använda det enligt
+                                            lag.
+                                            Dessa villkor ger dig inte rätt att använda några varumärken eller
+                                            logotyper
+                                            som används i våra Tjänster. Du får inte ta bort, dölja eller ändra
+                                            några
+                                            juridiska meddelanden som visas i eller i samband med våra Tjänster.
+                                            Några av våra Tjänster är tillgängliga på mobila enheter. Använd inte
+                                            dessa
+                                            Tjänster på ett sådant sätt att de distraherar dig eller hindrar dig
+                                            från
+                                            att följa trafik- eller säkerhetsregler.
+                                        </p>
+
+                                        <h3>Ditt Jolly Junk-konto</h3>
+                                        <p>Du kan behöva ett Jolly Junk-konto för att använda vissa av våra
+                                            Tjänster. Du
+                                            kan skapa ditt eget Jolly Junk-konto, eller så kan ditt Jolly Junk-konto
+                                            tilldelas dig av en administratör, till exempel din arbetsgivare eller
+                                            utbildningsinstitution. Om ditt Jolly Junk-konto har tilldelats av en
+                                            administratör kan andra eller ytterligare villkor gälla. Din
+                                            administratör
+                                            kan ha behörighet att komma åt eller inaktivera ditt konto.
+                                        </p>
+                                        <p>Skydda ditt Jolly Junk-konto genom att hålla lösenordet hemligt. Du
+                                            ansvarar
+                                            för all aktivitet som sker i eller via ditt Jolly Junk-konto. Använd
+                                            inte
+                                            lösenordet till ditt Jolly Junk-konto i externa tjänster eller program.
+                                            Om
+                                            du får kännedom om obehörig användning av ditt lösenord eller ditt Jolly
+                                            Junk-konto är det din skyldighet att kontakta Jolly Junk snarast.
+                                        </p>
+                                        <h3>Sekretess och upphovsrätt</h3>
+                                        <p>I Jolly Junks sekretesspolicyer kan du läsa om hur vi hanterar dina
+                                            personuppgifter och skyddar din integritet när du använder våra
+                                            Tjänster.
+                                            Genom att använda våra Tjänster accepterar du att Jolly Junk kan använda
+                                            dessa uppgifter i enlighet med våra sekretesspolicyer.
+                                        </p>
+                                        <p>Vi tillhandahåller information för att hjälpa upphovsrättsinnehavare att
+                                            hantera sina immateriella rättigheter på Internet. Om du anser att någon
+                                            kränker din upphovsrätt och vill veta hur du meddelar oss om detta kan
+                                            du
+                                            besöka vårt hjälpcenter. Där hittar du även Jolly Junks policy för hur
+                                            vi
+                                            besvarar sådana meddelanden.
+                                        </p>
+                                        <h3>Ditt innehåll i våra Tjänster</h3>
+                                        <p>I vissa av våra Tjänster kan du överföra, skicka in, lagra och skicka
+                                            eller
+                                            ta emot innehåll. Du behåller den immateriella äganderätten som du har
+                                            till
+                                            det innehållet. Det som tillhör dig fortsätter alltså att tillhöra dig.
+                                        </p>
+                                        <p>När du överför, skickar in, lagrar och skickar eller tar emot innehåll
+                                            till
+                                            eller via våra Tjänster ger du Jolly Junk (och våra samarbetspartners)
+                                            en
+                                            global licens att använda, värdlagra, spara, återge, ändra, skapa
+                                            härledda
+                                            verk (exempelvis översättningar, anpassningar eller modifieringar som vi
+                                            gör
+                                            så att ditt innehåll fungerar bättre med våra Tjänster), kommunicera,
+                                            publicera, framföra offentligt och distribuera innehållet. Rättigheterna
+                                            som
+                                            du beviljar i licensen gäller endast i syfte att driva, marknadsföra och
+                                            förbättra våra Tjänster, samt utveckla nya Tjänster. Denna licens
+                                            fortsätter
+                                            att gälla även om du upphör att använda våra Tjänster (exempelvis
+                                            företagsuppgifter som du har lagt till i Jolly Junk Maps). I vissa
+                                            Tjänster
+                                            är det möjligt att komma åt och ta bort innehåll som har skickats till
+                                            Tjänsten. I en del av våra Tjänster finns det också villkor eller
+                                            inställningar som begränsar vår användning av innehåll som skickas till
+                                            Tjänsterna. Se till att du innehar alla nödvändiga rättigheter för att
+                                            bevilja oss denna licens för innehåll som du skickar till våra Tjänster.
+                                        </p>
+                                        <p>Våra automatiserade system analyserar ditt innehåll (inklusive e-post) i
+                                            syfte att förse dig med produktfunktioner som är relevanta för dig, till
+                                            exempel anpassade sökresultat, anpassad reklam och identifiering av spam
+                                            och
+                                            skadlig programvara. Analysen sker när innehållet skickas, tas emot
+                                            eller
+                                            när det lagras.
+                                        </p>
+                                        <p>Om du har ett Jolly Junk-konto kan vi visa ditt Profilnamn, ditt
+                                            Profilfoto
+                                            och dina aktiviteter på Jolly Junk eller i externa program som är
+                                            länkade
+                                            till Jolly Junk-kontot (till exempel +1:or, recensioner eller
+                                            kommentarer du
+                                            skriver) i våra Tjänster, inklusive i annonser och i andra kommersiella
+                                            sammanhang. Vi respekterar dina inställningar och de val du gör vad
+                                            gäller
+                                            begränsad delning och synlighet i Jolly Junk-kontot. Du kan till exempel
+                                            konfigurera inställningarna så att ditt namn och ditt foto inte visas i
+                                            en
+                                            annons.
+                                        </p>
+                                        <p>Mer information om hur Jolly Junk använder och lagrar innehåll finns i
+                                            sekretesspolicyn eller i de ytterligare villkor som gäller för särskilda
+                                            Tjänster. Om du skickar in synpunkter och förslag gällande våra Tjänster
+                                            kan
+                                            vi använda dina synpunkter och förslag utan några förpliktelser gentemot
+                                            dig.
+                                        </p>
+                                        <h3>Om programvara i våra Tjänster</h3>
+                                        <p>När en Tjänst kräver eller inkluderar hämtningsbar programvara är det
+                                            möjligt
+                                            att denna programvara uppdateras automatiskt på din enhet när en ny
+                                            version
+                                            eller funktion blir tillgänglig. Vissa Tjänster kan tillåta att du
+                                            ändrar
+                                            dina inställningar för automatisk uppdatering.
+                                        </p>
+                                        <p>Jolly Junk ger dig en personlig, global, royaltyfri, ej överlåtbar och
+                                            icke-exklusiv licens att använda programvara som Jolly Junk
+                                            tillhandahåller
+                                            dig som en del av Tjänsterna. Det enda syftet med denna licens är att du
+                                            ska
+                                            kunna använda Tjänsterna så som de tillhandahålls av Jolly Junk, i
+                                            enlighet
+                                            med dessa villkor. Du får inte kopiera, modifiera, distribuera, sälja
+                                            eller
+                                            hyra ut någon del av våra Tjänster eller vår inkluderade programvara,
+                                            och du
+                                            får inte heller bakåtkompilera eller försöka extrahera källkoden till
+                                            någon
+                                            sådan programvara, förutom i den utsträckning som dessa begränsningar är
+                                            förbjudna enligt lag eller om du har skriftligt tillstånd från oss.
+                                        </p>
+                                        <p>Programvara med öppen källkod är viktig för oss. En del programvara som
+                                            används i våra Tjänster kan erbjudas enligt en öppen källkodslicens som
+                                            vi
+                                            gör tillgänglig för dig. Det kan finnas bestämmelser i den öppna
+                                            källkodslicensen som uttryckligen har företräde framför en del av dessa
+                                            villkor.
+                                        </p>
+                                        <h3>Modifiering och uppsägning av våra Tjänster</h3>
+                                        <p>Vi ändrar och förbättrar hela tiden våra Tjänster. Vi kan lägga till
+                                            eller ta
+                                            bort funktioner och vi kan ta bort eller avbryta en Tjänst helt och
+                                            hållet.
+                                        </p>
+                                        <p>Du kan när som helst sluta använda våra Tjänster, även om vi skulle tycka
+                                            att
+                                            det var tråkigt. Jolly Junk kan också när som helst upphöra att
+                                            tillhandahålla dig våra Tjänster eller lägga till eller skapa
+                                            begränsningar
+                                            avseende Tjänsterna.
+                                        </p>
+                                        <p>Vi anser att dina uppgifter tillhör dig och att din åtkomst till dessa
+                                            uppgifter är viktig. Om vi avbryter en Tjänst kommer vi, när så skäligen
+                                            är
+                                            möjligt, att ge dig en rimlig förvarning och en chans att hämta ut din
+                                            information från Tjänsten.
+                                        </p>
+                                        <h3>Våra garantier och friskrivningar</h3>
+                                        <p>Vi tillhandahåller våra Tjänster med en kommersiellt rimlig nivå av
+                                            kunnighet
+                                            och omsorg, och vi hoppas att du kommer tycka om dem. Det finns dock
+                                            vissa
+                                            saker som vi inte lovar om våra Tjänster.
+                                        </p>
+                                        <p>OM INTE ANNAT UTTRYCKLIGEN ANGES I DESSA VILLKOR ELLER YTTERLIGARE
+                                            VILLKOR
+                                            LÄMNAR VARKEN JOLLY JUNK ELLER DESS LEVERANTÖRER ELLER DISTRIBUTÖRER
+                                            NÅGRA
+                                            SPECIFIKA LÖFTEN OM TJÄNSTERNA. VI GÖR EXEMPELVIS INGA ÅTAGANDEN OM
+                                            INNEHÅLLET I TJÄNSTERNA, TJÄNSTERNAS SPECIFIKA FUNKTION, DERAS
+                                            TILLFÖRLITLIGHET, TILLGÄNGLIGHET, ELLER FÖRMÅGA ATT UPPFYLLA DINA BEHOV.
+                                            VI
+                                            TILLHANDAHÅLLER TJÄNSTERNA I BEFINTLIGT SKICK.
+                                        </p>
+                                        <p>I VISSA JURISDIKTIONER FÖRESKRIVS VISSA GARANTIER, EXEMPELVIS EN
+                                            UNDERFÖRSTÅDD GARANTI OM SÄLJBARHET, LÄMPLIGHET FÖR ETT VISST SYFTE OCH
+                                            ICKE-INTRÅNG. I DEN MÅN DET ÄR TILLÅTET ENLIGT LAG FRISKRIVER VI OSS
+                                            FRÅN
+                                            ALLA GARANTIER.
+                                        </p>
+                                        <h3>Ansvar för våra Tjänster</h3>
+                                        <p>NÄR DET ÄR TILLÅTET ENLIGT LAG ÄR JOLLY JUNK OCH JOLLY JUNKS LEVERANTÖRER
+                                            OCH
+                                            DISTRIBUTÖRER INTE ANSVARIGA FÖR UTEBLIVEN VINST, INTÄKT ELLER FÖRLORAD
+                                            DATA, EKONOMISK ELLER INDIREKT SKADA, SKADESTÅND PÅ GRUND AV SÄRSKILD
+                                            SKADA
+                                            (SPECIAL DAMAGES), FÖLJDSKADA (CONSEQUENTIAL DAMAGES), SKADESTÅND I
+                                            AVSKRÄCKANDE SYFTE (EXEMPLARY DAMAGES) ELLER STRAFFSKADESTÅND (PUNITIVE
+                                            DAMAGES).
+                                        </p>
+                                        <p>I DEN MÅN DET ÄR TILLÅTET ENLIGT LAG SKA DEN TOTALA ANSVARSSKYLDIGHETEN
+                                            FÖR
+                                            JOLLY JUNK OCH DESS LEVERANTÖRER OCH DISTRIBUTÖRER, FÖR ALLA ANSPRÅK
+                                            ENLIGT
+                                            DESSA VILLKOR, INKLUSIVE FÖR EVENTUELLA UNDERFÖRSTÅDDA GARANTIER, VARA
+                                            BEGRÄNSAD TILL DET BELOPP SOM DU BETALADE TILL OSS FÖR ATT ANVÄNDA
+                                            TJÄNSTERNA (ELLER, OM VI SÅ VÄLJER, FÖR ATT LEVERERA TJÄNSTERNA TILL DIG
+                                            IGEN).
+                                        </p>
+                                        <p>UNDER INGA OMSTÄNDIGHETER SKA JOLLY JUNK OCH DESS LEVERANTÖRER OCH
+                                            DISTRIBUTÖRER VARA ANSVARIGA FÖR NÅGON FÖRLUST ELLER SKADA SOM INTE
+                                            SKÄLIGEN
+                                            KAN FÖRUTSES.
+                                        </p>
+                                        <h3>Företagsanvändning av våra Tjänster</h3>
+                                        <p>Om du använder våra Tjänster i företagets namn är det företaget som
+                                            godkänner
+                                            dessa villkor. Företaget ska hålla Jolly Junk och dess dotterbolag,
+                                            samarbetspartners, tjänstemän, företrädare och anställda skadeslösa mot
+                                            eventuella anspråk, stämningar och andra processer som härrör från eller
+                                            som
+                                            uppkommit i samband med din användning av Tjänsterna eller till följd av
+                                            avtalsbrott, inklusive ersättningsskyldighet eller kostnad som uppstått
+                                            i
+                                            och med eventuella anspråk, förluster, skador, stämningar, domar,
+                                            rättegångs- och advokatkostnader.
+                                        </p>
+                                        <h3>Om dessa villkor</h3>
+                                        <p>Vi kan ändra dessa villkor eller ytterligare villkor som gäller för en
+                                            Tjänst, exempelvis för att avspegla ändringar i lag eller i våra
+                                            Tjänster.
+                                            Du bör regelbundet läsa villkoren. Om villkoren ändras meddelas det på
+                                            den
+                                            här sidan. Vi kommer att lägga upp meddelanden om ändrade ytterligare
+                                            villkor inom den relevanta tjänsten. Ändringar gäller inte retroaktivt
+                                            och
+                                            de kommer inte att träda i kraft förrän tidigast fjorton dagar efter att
+                                            de
+                                            läggs upp. Ändringar som gäller nya funktioner i en Tjänst eller
+                                            ändringar
+                                            som görs av juridiska skäl kommer dock att träda i kraft omedelbart. Om
+                                            du
+                                            inte accepterar de ändrade villkoren för en Tjänst ska du sluta använda
+                                            Tjänsten.
+                                        </p>
+                                        <p>Om det finns en motstridighet mellan dessa villkor och de ytterligare
+                                            villkoren ska de ytterligare villkoren ha företräde när det gäller denna
+                                            motstridighet.
+                                        </p>
+                                        <p>Dessa villkor reglerar relationen mellan Jolly Junk och dig. De skapar
+                                            inga
+                                            förmånsrättigheter för någon tredje part.
+                                        </p>
+                                        <p>Om du inte följer dessa villkor och vi inte vidtar åtgärder direkt
+                                            innebär
+                                            det inte att vi frånsäger oss några rättigheter som vi kan ha
+                                            (exempelvis
+                                            att vidta åtgärder i framtiden).
+                                        </p>
+                                        <p>Om det visar sig att ett visst villkor inte är verkställbart kommer det
+                                            inte
+                                            att påverka några andra villkor.
+                                        </p>
+
+                                        <p>Mer information om hur du kontaktar Jolly Junk finns på vår kontaktsida.
+                                        </p>
+
+                                        <div>
+                                            <button type="button" data-dismiss="modal" name="close" id="close"
+                                                    class="override"
+                                                    style="background-color:rgb(228,214,71); border-radius: 15px;"
+                                                    margin-right="10px" padding="10px">
+                                                Stäng
+                                            </button>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" name="registerMe" id="registerMe" class="override"
+                                    style="background-color:rgb(228,214,71); border-radius: 15px;">
+                                Skicka
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+<script th:src="@{vendor/jquery/jquery.js}"></script>
+<script th:src="@{vendor/bootstrap/js/bootstrap.bundle.js}"></script>
+<script th:src="@{vendor/jquery-easing/jquery.easing.js}"></script>
+<script th:src="@{js/angular.min.js}"></script>
+<script th:src="@{js/main.js}"></script>
+<script th:src="@{js/addressAPI.js}"></script>
+
+</body>
+</html>
