@@ -57,77 +57,62 @@ public class Attributes {
         return mace;
     }
 
-    Attributes() {
+    public Attributes health(final long value) {
+        this.health = value;
+        return this;
     }
 
-    public Builder builder() {
-        return new Builder();
+    public Attributes endurance(final long value) {
+        this.endurance = value;
+        return this;
     }
 
-    static class Builder {
-        private Attributes attributes;
-
-        Builder() {
-            this.attributes = new Attributes();
-        }
-
-        public Builder health(final long value){
-            attributes.health = value;
-            return this;
-        }
-
-        public Builder endurance(final long value){
-            attributes.endurance = value;
-            return this;
-        }
-
-        public Builder strength(final long value){
-            attributes.strength = value;
-            return this;
-        }
-
-        public Builder initiative(final long value){
-            attributes.initiative = value;
-            return this;
-        }
-
-        public Builder dodge(final long value){
-            attributes.dodge = value;
-            return this;
-        }
-
-        public Builder sword(final long value){
-            attributes.sword = value;
-            return this;
-        }
-
-        public Builder dagger(final long value){
-            attributes.dagger = value;
-            return this;
-        }
-
-        public Builder axe(final long value){
-            attributes.axe = value;
-            return this;
-        }
-
-        public Builder spear(final long value){
-            attributes.spear = value;
-            return this;
-        }
-
-        public Builder shield(final long value){
-            attributes.shield = value;
-            return this;
-        }
-
-        public Builder mace(final long value){
-            attributes.mace = value;
-            return this;
-        }
-
-        public Attributes build() {
-            return attributes;
-        }
+    public Attributes strength(final long value) {
+        this.strength = value;
+        return this;
     }
+
+    public Attributes initiative(final long value) {
+        this.initiative = value;
+        return this;
+    }
+
+    public Attributes dodge(final long value) {
+        this.dodge = value;
+        return this;
+    }
+
+    public Attributes sword(final long value) {
+        this.sword = value;
+        return this;
+    }
+
+    public Attributes dagger(final long value) {
+        this.dagger = value;
+        return this;
+    }
+
+    public Attributes axe(final long value) {
+        this.axe = value;
+        return this;
+    }
+
+    public Attributes spear(final long value) {
+        this.spear = value;
+        return this;
+    }
+
+    public Attributes shield(final long value) {
+        this.shield = value;
+        return this;
+    }
+
+    public Attributes mace(final long value) {
+        this.mace = value;
+        return this;
+    }
+
+    public Attributes() {
+    }
+
 }

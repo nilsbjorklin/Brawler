@@ -1,4 +1,4 @@
-package com.academy.brawler.Game.Items.Types;
+package com.academy.brawler.Game.Items;
 
 
 public enum ItemSlot {

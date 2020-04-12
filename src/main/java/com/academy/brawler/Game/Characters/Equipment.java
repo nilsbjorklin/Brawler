@@ -1,7 +1,7 @@
 package com.academy.brawler.Game.Characters;
 
 import com.academy.brawler.Game.Items.Item;
-import com.academy.brawler.Game.Items.Types.ItemSlot;
+import com.academy.brawler.Game.Items.ItemSlot;
 
 public class Equipment {
     private Item mainHand;
