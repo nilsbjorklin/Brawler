@@ -1,14 +1,14 @@
 package com.academy.brawler.Game.Match;
 
 import com.academy.brawler.Game.Characters.Fighter;
-import com.academy.brawler.Game.Items.FieldName;
+import com.academy.brawler.Game.Items.Fields.FieldName;
 import com.academy.brawler.Game.Items.Item;
 import com.academy.brawler.Game.Items.Types.Weapons.Weapon;
 
 
 public class CombatText {
 
-    static String combatInitiate(final Fighter attacker, final Item weapon, final Fighter defender) {
+    /*static String combatInitiate(final Fighter attacker, final Item weapon, final Fighter defender) {
         return String.format("%s launches at %s with %s,", attacker.getName(), defender.getName(), weapon.getField(FieldName.NAME));
     }
 
@@ -37,5 +37,5 @@ public class CombatText {
             reason = "is sent to the infirmary.";
         }
         return String.format("%s has taken to much damage and ", defender.getName());
-    }
+    }*/
 }

@@ -20,7 +20,7 @@ public class Match {
 
     private String CreateTurn(){
         ArrayList<Action> actions = new ArrayList<>();
-        return CombatText.combatAttack(firstTeam.getFighters().get(0), secondTeam.getFighters().get(0), firstTeam.getFighters().get(0).getEquipment().getMainHand());
+        return "tesd";//CombatText.combatAttack(firstTeam.getFighters().get(0), secondTeam.getFighters().get(0), firstTeam.getFighters().get(0).getEquipment().getMainHand());
     }
 
 

@@ -1,4 +1,4 @@
-package com.academy.brawler.Game.Items;
+package com.academy.brawler.Game.Items.Fields;
 
 public enum FieldName {
     NAME, BREAK_VALUE, ABSORBTION, DESCRIPTION, WEIGHT, ITEM_SLOTS, ATTRIBUTES, REQUIREMENTS, MIN_DAMAGE, MAX_DAMAGE, DAMAGE_CEILING, IS_TWO_HANDED, WEAPON_TYPE;
