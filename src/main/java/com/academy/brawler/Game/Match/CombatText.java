@@ -3,6 +3,8 @@ package com.academy.brawler.Game.Match;
 import com.academy.brawler.Game.Characters.Fighter;
 import com.academy.brawler.Game.Items.Item;
 
+import static com.academy.brawler.Game.Items.Fields.NAME_TAG;
+
 public class CombatText {
 
     private String combatDodge(final Fighter fighter){
@@ -10,6 +12,6 @@ public class CombatText {
     }
 
     private String combatParry(final Fighter fighter, final Item parryItem){
-        return String.format("%s manages to parry the attack with %s.", fighter.getName(), parryItem.getName());
+        return String.format("%s manages to parry the attack with %s.", fighter.getName(), parryItem. getField(NAME_TAG).getValues().get(0));
     }
 }

@@ -4,9 +4,10 @@ import com.academy.brawler.Game.Attributes;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.sun.javaws.exceptions.MissingFieldException;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.academy.brawler.Game.Items.Fields.*;
 
@@ -18,14 +19,13 @@ public interface Item {
         fields.add(new Field<String>(NAME_TAG, true));
         fields.add(new Field<String>(DESCRIPTION_TAG, true));
         fields.add(new Field<Long>(WEIGHT_TAG, true));
-        fields.add(new Field<ItemSlot[]>(ITEM_SLOTS_TAG, true));
+        fields.add(new Field<ItemSlot>(ITEM_SLOTS_TAG, true));
         fields.add(new Field<Attributes>(ATTRIBUTES_TAG, true));
         fields.add(new Field<Attributes>(REQUIREMENTS_TAG, true));
     }
 
     default boolean itemMatchesItemSlots(final ItemSlot itemSlot) {
-        Field field = getField(ITEM_SLOTS_TAG);
-        ItemSlot[] itemSlots = (ItemSlot[]) field.getValue();
+        List<ItemSlot> itemSlots = (List<ItemSlot>) getField(ITEM_SLOTS_TAG).getValues();
         for (ItemSlot slot : itemSlots) {
             if (slot.equals(itemSlot)) {
                 return true;
@@ -36,13 +36,17 @@ public interface Item {
 
     default void checkFields() throws MissingFieldException {
         for (final Field field : fields) {
-            if (field.getValue() == null && field.isRequired()) {
-                throw new MissingFieldException(field.toString(), field.getName());
+            if (field.numberOfValues() == 0 && field.isRequired()) {
+                throw new MissingFieldException(field);
             }
         }
     }
 
-    default ObjectNode asJson(){
+    default String[] getFieldNames() {
+        return fields.stream().map(Field::getName).collect(Collectors.joining(",")).split(",");
+    }
+
+    default ObjectNode asJson() {
         ArrayNode node = mapper.createArrayNode();
 
         for (final Field field : fields) {
@@ -52,12 +56,15 @@ public interface Item {
     }
 
 
-    default String asString(){
+    default String asString() {
         return asJson().toString();
     }
 
-    default void setFieldValue(final String fieldName, final Object fieldValue) {
-        getField(fieldName).setValue(fieldValue);
+    default Item addFieldValues(final String fieldName, final Object... fieldValues) {
+        for (Object fieldValue : fieldValues) {
+            getField(fieldName).addValue(fieldValue);
+        }
+        return this;
     }
 
     default Field getField(final String fieldName) {
@@ -69,43 +76,83 @@ public interface Item {
         return null;
     }
 
-    static class Field<Type> {
+    class Field<Type> {
         private String name;
-        private Type value;
+        private List<Type> values;
         private boolean required;
 
         public Field(final String fieldName, final boolean fieldRequired) {
             this.name = fieldName;
             this.required = fieldRequired;
+            values = new ArrayList<>();
         }
 
         public ObjectNode asJson() {
             ObjectNode node = mapper.createObjectNode();
             node.put("name", this.name);
-            node.put("value", this.value.toString());
+            switch (values.size()) {
+                case 0:
+                    node.put("value", "null");
+                case 1:
+                    node.set("value", getValueAsJson(values.get(0)));
+                    break;
+                default:
+                    ArrayNode arrayNode = mapper.createArrayNode();
+                    for (Type value : values) {
+                        arrayNode.add(getValueAsJson(value));
+                    }
+            }
+
+
             node.put("required", this.required);
+
             return node;
         }
 
-        @Override
-        public String toString() {
-            return asJson().toString();
+        private ObjectNode getValueAsJson(final Type value) {
+            ObjectNode node = mapper.createObjectNode();
+            if (this.values == null) {
+                node.put("value", "null");
+            } else {
+                if (value.getClass().equals(Attributes.class)) {
+                    node.set("value", ((Attributes) value).asJson());
+                } else {
+                    node.put("value", value.toString());
+                }
+            }
+            return node;
         }
 
-        public void setValue(final Type value) {
-            this.value = value;
+        public void addValue(final Type value) {
+            this.values.add(value);
         }
 
         public String getName() {
             return name;
         }
 
-        public Type getValue() {
-            return value;
+        public int numberOfValues() {
+            return values.size();
+        }
+
+
+        public List<Type> getValues() {
+            return values;
         }
 
         public boolean isRequired() {
             return required;
+        }
+
+        @Override
+        public String toString() {
+            return asJson().toString();
+        }
+    }
+
+    class MissingFieldException extends Exception {
+        public MissingFieldException(final Field field) {
+            super(String.format("Required field '´%s' is missing", field.getName()));
         }
     }
 }

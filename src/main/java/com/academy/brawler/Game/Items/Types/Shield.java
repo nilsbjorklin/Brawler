@@ -13,7 +13,7 @@ public class Shield implements Item {
         setFields();
         fields.add(new Field<Long>(ABSORBTION_TAG, true));
         fields.add(new Field<Long>(BREAK_VALUE_TAG, true));
-        getField(ITEM_SLOTS_TAG).setValue(ItemSlot.OFF_HAND);
+        getField(ITEM_SLOTS_TAG).addValue(ItemSlot.OFF_HAND);
 
     }
 }

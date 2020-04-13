@@ -1,118 +1,144 @@
 package com.academy.brawler.Game;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import java.util.TreeMap;
+
 public class Attributes {
-    private long health = 0;
-    private long endurance = 0;
-    private long strength = 0;
-    private long initiative = 0;
-    private long dodge = 0;
-    private long sword = 0;
-    private long dagger = 0;
-    private long axe = 0;
-    private long spear = 0;
-    private long shield = 0;
-    private long mace = 0;
+    private ObjectMapper mapper = new ObjectMapper();
+    TreeMap<String, Long> attributeMap;
+
+    private static final String HEALTH = "health";
+    private static final String ENDURANCE = "endurance";
+    private static final String STRENGTH = "strength";
+    private static final String INITIATIVE = "initiative";
+    private static final String DODGE = "dodge";
+    private static final String SWORD = "sword";
+    private static final String DAGGER = "dagger";
+    private static final String AXE = "axe";
+    private static final String SPEAR = "spear";
+    private static final String SHIELD = "shield";
+    private static final String MACE = "mace";
+
+    public Attributes(){
+        attributeMap = new TreeMap<>();
+        attributeMap.put(HEALTH, 0L);
+        attributeMap.put(ENDURANCE, 0L);
+        attributeMap.put(STRENGTH, 0L);
+        attributeMap.put(INITIATIVE, 0L);
+        attributeMap.put(DODGE, 0L);
+        attributeMap.put(SWORD, 0L);
+        attributeMap.put(DAGGER, 0L);
+        attributeMap.put(AXE, 0L);
+        attributeMap.put(SPEAR, 0L);
+        attributeMap.put(SHIELD, 0L);
+        attributeMap.put(MACE, 0L);
+    }
 
     public long getHealth() {
-        return health;
+        return attributeMap.get(HEALTH);
     }
 
     public long getEndurance() {
-        return endurance;
+        return attributeMap.get(ENDURANCE);
     }
 
     public long getStrength() {
-        return strength;
+        return attributeMap.get(STRENGTH);
     }
 
     public long getInitiative() {
-        return initiative;
+        return attributeMap.get(INITIATIVE);
     }
 
     public long getDodge() {
-        return dodge;
+        return attributeMap.get(DODGE);
     }
 
     public long getSword() {
-        return sword;
+        return attributeMap.get(SWORD);
     }
 
     public long getDagger() {
-        return dagger;
+        return attributeMap.get(DAGGER);
     }
 
     public long getAxe() {
-        return axe;
+        return attributeMap.get(AXE);
     }
 
     public long getSpear() {
-        return spear;
+        return attributeMap.get(SPEAR);
     }
 
     public long getShield() {
-        return shield;
+        return attributeMap.get(SHIELD);
     }
 
     public long getMace() {
-        return mace;
+        return attributeMap.get(MACE);
+    }
+
+    private Attributes setAttribute(final String tag, final long value){
+        attributeMap.put(tag, value);
+        return this;
+
     }
 
     public Attributes health(final long value) {
-        this.health = value;
-        return this;
+        return setAttribute(HEALTH, value);
     }
 
     public Attributes endurance(final long value) {
-        this.endurance = value;
-        return this;
+        return setAttribute(ENDURANCE, value);
     }
 
     public Attributes strength(final long value) {
-        this.strength = value;
-        return this;
+        return setAttribute(STRENGTH, value);
     }
 
     public Attributes initiative(final long value) {
-        this.initiative = value;
-        return this;
+        return setAttribute(INITIATIVE, value);
     }
 
     public Attributes dodge(final long value) {
-        this.dodge = value;
-        return this;
+        return setAttribute(DODGE, value);
     }
 
     public Attributes sword(final long value) {
-        this.sword = value;
-        return this;
+        return setAttribute(SWORD, value);
     }
 
     public Attributes dagger(final long value) {
-        this.dagger = value;
-        return this;
+        return setAttribute(DAGGER, value);
     }
 
     public Attributes axe(final long value) {
-        this.axe = value;
-        return this;
+        return setAttribute(AXE, value);
     }
 
     public Attributes spear(final long value) {
-        this.spear = value;
-        return this;
+        return setAttribute(SPEAR, value);
     }
 
     public Attributes shield(final long value) {
-        this.shield = value;
-        return this;
+        return setAttribute(SHIELD, value);
     }
 
     public Attributes mace(final long value) {
-        this.mace = value;
-        return this;
+        return setAttribute(MACE, value);
     }
 
-    public Attributes() {
+    public ObjectNode asJson(){
+        ObjectNode node = mapper.createObjectNode();
+        attributeMap.forEach(node::put);
+
+        return node;
     }
 
+    @Override
+    public String toString() {
+        return asJson().toString();
+    }
 }
