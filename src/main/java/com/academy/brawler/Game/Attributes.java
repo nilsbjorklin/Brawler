@@ -1,5 +1,6 @@
 package com.academy.brawler.Game;
 
+import com.academy.brawler.Game.Items.Types.Weapons.WeaponType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -14,26 +15,20 @@ public class Attributes {
     private static final String STRENGTH = "strength";
     private static final String INITIATIVE = "initiative";
     private static final String DODGE = "dodge";
-    private static final String SWORD = "sword";
-    private static final String DAGGER = "dagger";
-    private static final String AXE = "axe";
-    private static final String SPEAR = "spear";
-    private static final String SHIELD = "shield";
-    private static final String MACE = "mace";
 
-    public Attributes(){
+    public Attributes() {
         attributeMap = new TreeMap<>();
         attributeMap.put(HEALTH, 0L);
         attributeMap.put(ENDURANCE, 0L);
         attributeMap.put(STRENGTH, 0L);
         attributeMap.put(INITIATIVE, 0L);
         attributeMap.put(DODGE, 0L);
-        attributeMap.put(SWORD, 0L);
-        attributeMap.put(DAGGER, 0L);
-        attributeMap.put(AXE, 0L);
-        attributeMap.put(SPEAR, 0L);
-        attributeMap.put(SHIELD, 0L);
-        attributeMap.put(MACE, 0L);
+        attributeMap.put(WeaponType.SWORD.value(), 0L);
+        attributeMap.put(WeaponType.DAGGER.value(), 0L);
+        attributeMap.put(WeaponType.AXE.value(), 0L);
+        attributeMap.put(WeaponType.SPEAR.value(), 0L);
+        attributeMap.put(WeaponType.SHIELD.value(), 0L);
+        attributeMap.put(WeaponType.MACE.value(), 0L);
     }
 
     public long getHealth() {
@@ -57,30 +52,30 @@ public class Attributes {
     }
 
     public long getSword() {
-        return attributeMap.get(SWORD);
+        return attributeMap.get(WeaponType.SWORD.value());
     }
 
     public long getDagger() {
-        return attributeMap.get(DAGGER);
+        return attributeMap.get(WeaponType.DAGGER.value());
     }
 
     public long getAxe() {
-        return attributeMap.get(AXE);
+        return attributeMap.get(WeaponType.AXE.value());
     }
 
     public long getSpear() {
-        return attributeMap.get(SPEAR);
+        return attributeMap.get(WeaponType.SPEAR.value());
     }
 
     public long getShield() {
-        return attributeMap.get(SHIELD);
+        return attributeMap.get(WeaponType.SHIELD.value());
     }
 
     public long getMace() {
-        return attributeMap.get(MACE);
+        return attributeMap.get(WeaponType.MACE.value());
     }
 
-    private Attributes setAttribute(final String tag, final long value){
+    private Attributes setAttribute(final String tag, final long value) {
         attributeMap.put(tag, value);
         return this;
 
@@ -107,32 +102,36 @@ public class Attributes {
     }
 
     public Attributes sword(final long value) {
-        return setAttribute(SWORD, value);
+        return setAttribute(WeaponType.SWORD.value(), value);
     }
 
     public Attributes dagger(final long value) {
-        return setAttribute(DAGGER, value);
+        return setAttribute(WeaponType.DAGGER.value(), value);
     }
 
     public Attributes axe(final long value) {
-        return setAttribute(AXE, value);
+        return setAttribute(WeaponType.AXE.value(), value);
     }
 
     public Attributes spear(final long value) {
-        return setAttribute(SPEAR, value);
+        return setAttribute(WeaponType.SPEAR.value(), value);
     }
 
     public Attributes shield(final long value) {
-        return setAttribute(SHIELD, value);
+        return setAttribute(WeaponType.SHIELD.value(), value);
     }
 
     public Attributes mace(final long value) {
-        return setAttribute(MACE, value);
+        return setAttribute(WeaponType.MACE.value(), value);
     }
 
-    public ObjectNode asJson(){
+    public ObjectNode asJson() {
         ObjectNode node = mapper.createObjectNode();
-        attributeMap.forEach(node::put);
+        attributeMap.forEach((name, value) -> {
+            if (value != 0) {
+                node.put(name, value);
+            }
+        });
 
         return node;
     }

@@ -7,25 +7,22 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import static com.academy.brawler.Game.Items.Fields.*;
 
 public interface Item {
     ObjectMapper mapper = new ObjectMapper();
     ArrayList<Field> fields = new ArrayList<>();
 
     default void setFields() {
-        fields.add(new Field<String>(NAME_TAG, true));
-        fields.add(new Field<String>(DESCRIPTION_TAG, true));
-        fields.add(new Field<Long>(WEIGHT_TAG, true));
-        fields.add(new Field<ItemSlot>(ITEM_SLOTS_TAG, true));
-        fields.add(new Field<Attributes>(ATTRIBUTES_TAG, true));
-        fields.add(new Field<Attributes>(REQUIREMENTS_TAG, true));
+        fields.add(new Field<String>(FieldName.NAME, true));
+        fields.add(new Field<String>(FieldName.DESCRIPTION, true));
+        fields.add(new Field<Long>(FieldName.WEIGHT, true));
+        fields.add(new Field<ItemSlot>(FieldName.ITEM_SLOTS, true));
+        fields.add(new Field<Attributes>(FieldName.ATTRIBUTES, true));
+        fields.add(new Field<Attributes>(FieldName.REQUIREMENTS, true));
     }
 
     default boolean itemMatchesItemSlots(final ItemSlot itemSlot) {
-        List<ItemSlot> itemSlots = (List<ItemSlot>) getField(ITEM_SLOTS_TAG).getValues();
+        List<ItemSlot> itemSlots = (List<ItemSlot>) getField(FieldName.ITEM_SLOTS).getValues();
         for (ItemSlot slot : itemSlots) {
             if (slot.equals(itemSlot)) {
                 return true;
@@ -42,8 +39,20 @@ public interface Item {
         }
     }
 
-    default String[] getFieldNames() {
-        return fields.stream().map(Field::getName).collect(Collectors.joining(",")).split(",");
+    default ObjectNode getFieldNames() {
+        ArrayNode requireFields = mapper.createArrayNode();
+        ArrayNode optionalFields = mapper.createArrayNode();
+        fields.forEach(field -> {
+            if (field.isRequired()){
+                requireFields.add(field.name.name());
+            } else {
+                optionalFields.add(field.name.name());
+            }
+        });
+        ObjectNode node = mapper.createObjectNode();
+        node.set("required", requireFields);
+        node.set("optional", optionalFields);
+        return node;
     }
 
     default ObjectNode asJson() {
@@ -60,14 +69,14 @@ public interface Item {
         return asJson().toString();
     }
 
-    default Item addFieldValues(final String fieldName, final Object... fieldValues) {
+    default Item addFieldValues(final FieldName fieldName, final Object... fieldValues) {
         for (Object fieldValue : fieldValues) {
             getField(fieldName).addValue(fieldValue);
         }
         return this;
     }
 
-    default Field getField(final String fieldName) {
+    default Field getField(final FieldName fieldName) {
         for (final Field field : fields) {
             if (field.getName().equals(fieldName)) {
                 return field;
@@ -77,11 +86,11 @@ public interface Item {
     }
 
     class Field<Type> {
-        private String name;
+        private FieldName name;
         private List<Type> values;
         private boolean required;
 
-        public Field(final String fieldName, final boolean fieldRequired) {
+        public Field(final FieldName fieldName, final boolean fieldRequired) {
             this.name = fieldName;
             this.required = fieldRequired;
             values = new ArrayList<>();
@@ -89,10 +98,12 @@ public interface Item {
 
         public ObjectNode asJson() {
             ObjectNode node = mapper.createObjectNode();
-            node.put("name", this.name);
+
+            node.put("name", this.name.name());
             switch (values.size()) {
                 case 0:
                     node.put("value", "null");
+                    break;
                 case 1:
                     node.set("value", getValueAsJson(values.get(0)));
                     break;
@@ -127,7 +138,7 @@ public interface Item {
             this.values.add(value);
         }
 
-        public String getName() {
+        public FieldName getName() {
             return name;
         }
 
@@ -135,6 +146,14 @@ public interface Item {
             return values.size();
         }
 
+
+        public Type getValue() {
+            if (values.size() > 1){
+                throw new NullPointerException();
+            } else {
+                return values.get(0);
+            }
+        }
 
         public List<Type> getValues() {
             return values;
