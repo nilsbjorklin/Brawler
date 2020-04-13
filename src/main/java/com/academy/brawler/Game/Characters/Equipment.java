@@ -2,25 +2,33 @@ package com.academy.brawler.Game.Characters;
 
 import com.academy.brawler.Game.Items.Item;
 import com.academy.brawler.Game.Items.ItemSlot;
+import com.academy.brawler.Game.Items.Types.Armor;
+import com.academy.brawler.Game.Items.Types.Shield;
+import com.academy.brawler.Game.Items.Types.Weapons.Weapon;
 
 public class Equipment {
-    private Item mainHand;
-    private Item offHand;
-    private Item armor;
+    private Weapon mainHand;
+    private Shield shield;
+    private Weapon offHand;
+    private Armor armor;
     private Item[] trinkets = new Item[2];
 
     public Equipment() {
     }
 
-    public Item getMainHand() {
+    public Weapon getMainHand() {
         return mainHand;
     }
 
-    public Item getOffHand() {
+    public Weapon getOffHand() {
         return offHand;
     }
 
-    public Item getArmor() {
+    public Shield getShield() {
+        return shield;
+    }
+
+    public Armor getArmor() {
         return armor;
     }
 
@@ -28,21 +36,27 @@ public class Equipment {
         return trinkets;
     }
 
-    public void setMainHand(final Item mainHandItem) {
+    public void setMainHand(final Weapon mainHandItem) {
         if (mainHandItem.itemMatchesItemSlots(ItemSlot.MAIN_HAND)){
-            this.offHand = mainHandItem;
+            this.mainHand = mainHandItem;
         }
     }
 
-    public void setOffHand(final Item offHandItem) {
+    public void setOffHand(final Weapon offHandItem) {
         if (offHandItem.itemMatchesItemSlots(ItemSlot.OFF_HAND)){
             this.offHand = offHandItem;
         }
     }
 
-    public void setArmor(final Item armorItem) {
+    public void setOffHand(final Shield shield) {
+        if (shield.itemMatchesItemSlots(ItemSlot.OFF_HAND)){
+            this.shield = shield;
+        }
+    }
+
+    public void setArmor(final Armor armorItem) {
         if (armorItem.itemMatchesItemSlots(ItemSlot.BODY)){
-            this.offHand = armorItem;
+            this.armor = armorItem;
         }
     }
 

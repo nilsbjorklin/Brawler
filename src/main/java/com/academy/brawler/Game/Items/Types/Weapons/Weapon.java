@@ -19,7 +19,7 @@ public abstract class Weapon implements Item {
         fields.add(new Field<WeaponType>(WEAPON_TYPE, true));
     }
 
-    public long generateHit(final int strength){
+    public int generateHit(final int strength){
         int minDamage = (int) getField(MIN_DAMAGE).getValue();
         int maxDamage = (int) getField(MAX_DAMAGE).getValue();
         int damageCeiling = (int) getField(DAMAGE_CEILING).getValue();

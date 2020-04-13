@@ -7,121 +7,130 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.util.TreeMap;
 
 public class Attributes {
-    private ObjectMapper mapper = new ObjectMapper();
-    TreeMap<String, Long> attributeMap;
-
     private static final String HEALTH = "health";
+    private static final String LEVEL = "level";
     private static final String ENDURANCE = "endurance";
     private static final String STRENGTH = "strength";
     private static final String INITIATIVE = "initiative";
     private static final String DODGE = "dodge";
+    TreeMap<String, Integer> attributeMap;
+    private ObjectMapper mapper = new ObjectMapper();
 
     public Attributes() {
         attributeMap = new TreeMap<>();
-        attributeMap.put(HEALTH, 0L);
-        attributeMap.put(ENDURANCE, 0L);
-        attributeMap.put(STRENGTH, 0L);
-        attributeMap.put(INITIATIVE, 0L);
-        attributeMap.put(DODGE, 0L);
-        attributeMap.put(WeaponType.SWORD.value(), 0L);
-        attributeMap.put(WeaponType.DAGGER.value(), 0L);
-        attributeMap.put(WeaponType.AXE.value(), 0L);
-        attributeMap.put(WeaponType.SPEAR.value(), 0L);
-        attributeMap.put(WeaponType.SHIELD.value(), 0L);
-        attributeMap.put(WeaponType.MACE.value(), 0L);
+        attributeMap.put(LEVEL, 1);
+        attributeMap.put(HEALTH, 0);
+        attributeMap.put(ENDURANCE, 0);
+        attributeMap.put(STRENGTH, 0);
+        attributeMap.put(INITIATIVE, 0);
+        attributeMap.put(DODGE, 0);
+        attributeMap.put(WeaponType.SWORD.value(), 0);
+        attributeMap.put(WeaponType.DAGGER.value(), 0);
+        attributeMap.put(WeaponType.AXE.value(), 0);
+        attributeMap.put(WeaponType.SPEAR.value(), 0);
+        attributeMap.put(WeaponType.SHIELD.value(), 0);
+        attributeMap.put(WeaponType.MACE.value(), 0);
     }
 
-    public long getHealth() {
+    public int getHealth() {
         return attributeMap.get(HEALTH);
     }
 
-    public long getEndurance() {
+    public int getEndurance() {
         return attributeMap.get(ENDURANCE);
     }
 
-    public long getStrength() {
+    public int getStrength() {
         return attributeMap.get(STRENGTH);
     }
 
-    public long getInitiative() {
+    public int getInitiative() {
         return attributeMap.get(INITIATIVE);
     }
 
-    public long getDodge() {
+    public int getDodge() {
         return attributeMap.get(DODGE);
     }
 
-    public long getSword() {
+    public int getSword() {
         return attributeMap.get(WeaponType.SWORD.value());
     }
 
-    public long getDagger() {
+    public int getDagger() {
         return attributeMap.get(WeaponType.DAGGER.value());
     }
 
-    public long getAxe() {
+    public int getAxe() {
         return attributeMap.get(WeaponType.AXE.value());
     }
 
-    public long getSpear() {
+    public int getSpear() {
         return attributeMap.get(WeaponType.SPEAR.value());
     }
 
-    public long getShield() {
+    public int getShield() {
         return attributeMap.get(WeaponType.SHIELD.value());
     }
 
-    public long getMace() {
+    public int getMace() {
         return attributeMap.get(WeaponType.MACE.value());
     }
 
-    private Attributes setAttribute(final String tag, final long value) {
+    private Attributes setAttribute(final String tag, final int value) {
         attributeMap.put(tag, value);
         return this;
 
     }
 
-    public Attributes health(final long value) {
+    public int getLevel() {
+        return attributeMap.get(LEVEL);
+    }
+
+    public Attributes level(final int value) {
+        return setAttribute(LEVEL, value);
+    }
+
+    public Attributes health(final int value) {
         return setAttribute(HEALTH, value);
     }
 
-    public Attributes endurance(final long value) {
+    public Attributes endurance(final int value) {
         return setAttribute(ENDURANCE, value);
     }
 
-    public Attributes strength(final long value) {
+    public Attributes strength(final int value) {
         return setAttribute(STRENGTH, value);
     }
 
-    public Attributes initiative(final long value) {
+    public Attributes initiative(final int value) {
         return setAttribute(INITIATIVE, value);
     }
 
-    public Attributes dodge(final long value) {
+    public Attributes dodge(final int value) {
         return setAttribute(DODGE, value);
     }
 
-    public Attributes sword(final long value) {
+    public Attributes sword(final int value) {
         return setAttribute(WeaponType.SWORD.value(), value);
     }
 
-    public Attributes dagger(final long value) {
+    public Attributes dagger(final int value) {
         return setAttribute(WeaponType.DAGGER.value(), value);
     }
 
-    public Attributes axe(final long value) {
+    public Attributes axe(final int value) {
         return setAttribute(WeaponType.AXE.value(), value);
     }
 
-    public Attributes spear(final long value) {
+    public Attributes spear(final int value) {
         return setAttribute(WeaponType.SPEAR.value(), value);
     }
 
-    public Attributes shield(final long value) {
+    public Attributes shield(final int value) {
         return setAttribute(WeaponType.SHIELD.value(), value);
     }
 
-    public Attributes mace(final long value) {
+    public Attributes mace(final int value) {
         return setAttribute(WeaponType.MACE.value(), value);
     }
 

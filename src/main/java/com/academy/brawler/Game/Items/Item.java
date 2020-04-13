@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public interface Item {
     ObjectMapper mapper = new ObjectMapper();
@@ -32,9 +33,13 @@ public interface Item {
     }
 
     default void checkFields() throws MissingFieldException {
+        System.out.println(getFieldNames().toPrettyString());
         for (final Field field : fields) {
             if (field.numberOfValues() == 0 && field.isRequired()) {
+                System.err.printf("Field %s not found, value: %s.%n", field.getName(), field.getValue());
                 throw new MissingFieldException(field);
+            } else {
+                System.out.printf("Field %s found, value: %s.%n", field.getName(), field.getValue());
             }
         }
     }
@@ -148,7 +153,10 @@ public interface Item {
 
 
         public Type getValue() {
-            if (values.size() > 1){
+            if (values.size() == 0){
+                return null;
+            } else if (values.size() > 1){
+                System.err.printf("To many values found for field %s%nValues: %s%n", getName(), values.stream().map(value -> value.toString()).collect(Collectors.joining(", ")));
                 throw new NullPointerException();
             } else {
                 return values.get(0);
@@ -171,7 +179,7 @@ public interface Item {
 
     class MissingFieldException extends Exception {
         public MissingFieldException(final Field field) {
-            super(String.format("Required field '´%s' is missing", field.getName()));
+            super(String.format("Required field '%s' is missing", field.getName()));
         }
     }
 }

@@ -1,14 +1,20 @@
 package com.academy.brawler.Game.Match;
 
 import com.academy.brawler.Game.Characters.Fighter;
-import com.academy.brawler.Game.Characters.Gladiator;
 
+import java.util.Arrays;
 import java.util.List;
 
+
 public class Team {
-    private static List<Fighter> gladiators;
+    private List<Fighter> fighters;
 
-    public Team(final Gladiator ... gladiators){
+    public Team(final Fighter ... fightersArr){
+        fighters.addAll(Arrays.asList(fightersArr));
 
+    }
+
+    public List<Fighter> getFighters() {
+        return fighters;
     }
 }
