@@ -1,7 +1,6 @@
 package com.academy.brawler.Game.Items.Types.Weapons;
 
 import com.academy.brawler.Game.Items.Fields.ArrayField;
-import com.academy.brawler.Game.Items.Fields.FieldName;
 import com.academy.brawler.Game.Items.Fields.SingleField;
 import com.academy.brawler.Game.Items.ItemSlot;
 

@@ -1,29 +1,26 @@
 package com.academy.brawler.Game.Items.Types;
 
-import com.academy.brawler.Game.Items.Fields.ArrayField;
 import com.academy.brawler.Game.Items.Fields.FieldName;
-import com.academy.brawler.Game.Items.Fields.SingleField;
 import com.academy.brawler.Game.Items.Item;
 import com.academy.brawler.Game.Items.ItemSlot;
 import com.academy.brawler.Game.Items.Types.Weapons.WeaponType;
+
+import java.io.InvalidObjectException;
 
 import static com.academy.brawler.Game.Items.Fields.FieldName.*;
 
 public class Shield extends Item {
 
-    public Shield() {
+    public Shield() throws InvalidObjectException {
         super();
-        setField(FieldName.ABSORBTION, new SingleField<Integer>(FieldName.ABSORBTION, true));
-        setField(FieldName.BREAK_VALUE, new SingleField<Integer>(FieldName.BREAK_VALUE, true));
-        setField(FieldName.WEAPON_TYPE, new SingleField<WeaponType>(FieldName.WEAPON_TYPE, true));
-        setField(FieldName.BREAK_VALUE, new SingleField<Integer>(FieldName.BREAK_VALUE, true));
+        createField(FieldName.ABSORBTION, true, false, Integer.class);
+        createField(FieldName.BREAK_VALUE, true, false, Integer.class);
+        createField(FieldName.WEAPON_TYPE, true, false, WeaponType.class);
+        createField(FieldName.BREAK_VALUE, true, false, Integer.class);
 
+        getArrayItemSlotField(ITEM_SLOTS).addValue(ItemSlot.OFF_HAND);
 
-        ArrayField<ItemSlot> itemSlots = (ArrayField<ItemSlot>)getField(ITEM_SLOTS);
-        itemSlots.addValue(ItemSlot.OFF_HAND);
-
-        SingleField<WeaponType> weaponType = (SingleField<WeaponType>)getField(WEAPON_TYPE);
-        weaponType.setValue(WeaponType.SHIELD);
+        getSingleWeaponTypeField(WEAPON_TYPE).setValue(WeaponType.SHIELD);
 
     }
 }

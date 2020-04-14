@@ -1,21 +1,20 @@
 package com.academy.brawler.Game.Items.Types;
 
-import com.academy.brawler.Game.Items.Fields.ArrayField;
 import com.academy.brawler.Game.Items.Fields.FieldName;
-import com.academy.brawler.Game.Items.Fields.SingleField;
 import com.academy.brawler.Game.Items.Item;
 import com.academy.brawler.Game.Items.ItemSlot;
+
+import java.io.InvalidObjectException;
 
 import static com.academy.brawler.Game.Items.Fields.FieldName.*;
 
 public class Armor extends Item {
 
-    public Armor(){
+    public Armor() throws InvalidObjectException {
         super();
-        setField(FieldName.ABSORBTION, new SingleField<Integer>(FieldName.ABSORBTION, true));
+        createField(FieldName.ABSORBTION, true, false, Integer.class);
 
-        ArrayField<ItemSlot> itemSlots = (ArrayField<ItemSlot>)getField(ITEM_SLOTS);
-        itemSlots.addValue(ItemSlot.BODY);
+        getArrayItemSlotField(ITEM_SLOTS).addValue(ItemSlot.BODY);
     }
 
 }

@@ -1,7 +1,6 @@
 package com.academy.brawler.Game.Items.Types.Weapons;
 
 import com.academy.brawler.Game.Items.Fields.FieldName;
-import com.academy.brawler.Game.Items.Fields.SingleField;
 import com.academy.brawler.Game.Items.Item;
 
 import java.util.Random;
@@ -9,12 +8,13 @@ import java.util.Random;
 public abstract class Weapon extends Item {
 
     public Weapon() {
-        setField(FieldName.BREAK_VALUE, new SingleField<Integer>(FieldName.BREAK_VALUE, true));
-        setField(FieldName.MIN_DAMAGE, new SingleField<Integer>(FieldName.MIN_DAMAGE, true));
-        setField(FieldName.MAX_DAMAGE, new SingleField<Integer>(FieldName.MAX_DAMAGE, true));
-        setField(FieldName.DAMAGE_CEILING, new SingleField<Integer>(FieldName.DAMAGE_CEILING, true));
-        setField(FieldName.IS_TWO_HANDED, new SingleField<Boolean>(FieldName.IS_TWO_HANDED, true));
-        setField(FieldName.WEAPON_TYPE, new SingleField<WeaponType>(FieldName.WEAPON_TYPE, true));
+        super();
+        createField(FieldName.BREAK_VALUE, true, false, Integer.class);
+        createField(FieldName.MIN_DAMAGE, true, false, Integer.class);
+        createField(FieldName.MAX_DAMAGE, true, false, Integer.class);
+        createField(FieldName.DAMAGE_CEILING, true, false, Integer.class);
+        createField(FieldName.IS_TWO_HANDED, true, false, Boolean.class);
+        createField(FieldName.WEAPON_TYPE, true, false, WeaponType.class);
     }
 
     public int generateHit(final int strength){

@@ -5,10 +5,12 @@ import com.academy.brawler.Game.Items.Fields.ArrayField;
 import com.academy.brawler.Game.Items.Fields.Field;
 import com.academy.brawler.Game.Items.Fields.FieldName;
 import com.academy.brawler.Game.Items.Fields.SingleField;
+import com.academy.brawler.Game.Items.Types.Weapons.WeaponType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import java.io.InvalidObjectException;
 import java.util.List;
 import java.util.TreeMap;
 
@@ -16,17 +18,13 @@ public abstract class Item {
     private ObjectMapper mapper = new ObjectMapper();
     private TreeMap<FieldName, Field> fields = new TreeMap<>();
 
-    public void setField(final FieldName fieldName, final Field field){
-        fields.put(fieldName, field);
-    }
-
     public Item() {
-        setField(FieldName.NAME, new SingleField<String>(FieldName.NAME, true));
-        setField(FieldName.DESCRIPTION, new SingleField<String>(FieldName.DESCRIPTION, true));
-        setField(FieldName.WEIGHT, new SingleField<Long>(FieldName.WEIGHT, true));
-        setField(FieldName.ITEM_SLOTS, new ArrayField<ItemSlot>(FieldName.ITEM_SLOTS, true));
-        setField(FieldName.ATTRIBUTES, new SingleField<Attributes>(FieldName.ATTRIBUTES, true));
-        setField(FieldName.REQUIREMENTS, new SingleField<Attributes>(FieldName.REQUIREMENTS, true));
+        createField(FieldName.NAME, true, false, String.class);
+        createField(FieldName.DESCRIPTION, true, false, String.class);
+        createField(FieldName.WEIGHT, true, false, Integer.class);
+        createField(FieldName.ITEM_SLOTS, true, true, ItemSlot.class);
+        createField(FieldName.ATTRIBUTES, true, false, Attributes.class);
+        createField(FieldName.REQUIREMENTS, true, false, Attributes.class);
     }
 
     public boolean itemMatchesItemSlots(final ItemSlot itemSlot) {
@@ -41,14 +39,107 @@ public abstract class Item {
         return false;
     }
 
-    public SingleField<String> getNameField(){
-        Field field = fields.get(FieldName.NAME);
-        if (field.getClass().equals(SingleField.class)){
-            return (SingleField<String>) fields.get(FieldName.NAME);
+    public void createField(final FieldName fieldName, final boolean required, final boolean array, final Class type) {
+        if (array) {
+            createArrayField(fieldName, required, type);
         } else {
-            System.err.printf("found field of type %s, expected %s field.%n", field.getClass(), SingleField.class);
-            return null;
+            createSingleField(fieldName, required, type);
         }
+    }
+
+    public void createSingleField(final FieldName fieldName, final boolean required, final Class type) {
+        if (type.equals(Integer.class)) {
+            fields.put(fieldName, new SingleField<Integer>(fieldName, required));
+        } else if (type.equals(String.class)) {
+            fields.put(fieldName, new SingleField<String>(fieldName, required));
+        } else if (type.equals(Boolean.class)) {
+            fields.put(fieldName, new SingleField<Boolean>(fieldName, required));
+        } else if (type.equals(WeaponType.class)) {
+            fields.put(fieldName, new SingleField<WeaponType>(fieldName, required));
+        } else if (type.equals(Attributes.class)) {
+            fields.put(fieldName, new SingleField<Attributes>(fieldName, required));
+        } else {
+            throw new IllegalArgumentException("Cannot find array of type " + type.getCanonicalName());
+        }
+    }
+
+    public void createArrayField(final FieldName fieldName, final boolean required, final Class type) {
+        if (type.equals(Integer.class)) {
+            fields.put(fieldName, new ArrayField<Integer>(fieldName, required));
+        } else if (type.equals(String.class)) {
+            fields.put(fieldName, new ArrayField<String>(fieldName, required));
+        } else if (type.equals(ItemSlot.class)) {
+            fields.put(fieldName, new ArrayField<ItemSlot>(fieldName, required));
+        } else {
+            throw new IllegalArgumentException("Cannot find array of type " + type.getCanonicalName());
+        }
+    }
+
+
+    public SingleField<Attributes> getAttributesField(final FieldName fieldName) throws InvalidObjectException {
+        Field field = fields.get(fieldName);
+
+        if (field.getClass().equals(SingleField.class)) {
+            return (SingleField<Attributes>) fields.get(fieldName);
+        } else {
+            throw new InvalidObjectException(String.format("Found field of type %s, expected %s field.%n", field.getClass(), SingleField.class));
+        }
+    }
+
+
+    public SingleField<String> getSingleStringField(final FieldName fieldName) throws InvalidObjectException {
+        Field field = fields.get(fieldName);
+
+        if (field.getClass().equals(SingleField.class)) {
+            return (SingleField<String>) fields.get(fieldName);
+        } else {
+            throw new InvalidObjectException(String.format("Found field of type %s, expected %s field.%n", field.getClass(), SingleField.class));
+        }
+    }
+
+    public SingleField<Integer> getSingleIntegerField(final FieldName fieldName) throws InvalidObjectException {
+        Field field = fields.get(fieldName);
+
+        if (field.getClass().equals(SingleField.class)) {
+            return (SingleField<Integer>) fields.get(fieldName);
+        } else {
+            throw new InvalidObjectException(String.format("Found field of type %s, expected %s field.%n", field.getClass(), SingleField.class));
+        }
+    }
+
+    public SingleField<Attributes> getSingleAttributesField(final FieldName fieldName) throws InvalidObjectException {
+        Field field = fields.get(fieldName);
+
+        if (field.getClass().equals(SingleField.class)) {
+            return (SingleField<Attributes>) fields.get(fieldName);
+        } else {
+            throw new InvalidObjectException(String.format("Found field of type %s, expected %s field.%n", field.getClass(), SingleField.class));
+        }
+    }
+
+    public SingleField<WeaponType> getSingleWeaponTypeField(final FieldName fieldName) throws InvalidObjectException {
+        Field field = fields.get(fieldName);
+
+        if (field.getClass().equals(SingleField.class)) {
+            return (SingleField<WeaponType>) fields.get(fieldName);
+        } else {
+            throw new InvalidObjectException(String.format("Found field of type %s, expected %s field.%n", field.getClass(), SingleField.class));
+        }
+    }
+
+    public ArrayField<ItemSlot> getArrayItemSlotField(final FieldName fieldName) throws InvalidObjectException {
+        Field field = fields.get(fieldName);
+
+        if (field.getClass().equals(ArrayField.class)) {
+            return (ArrayField<ItemSlot>) fields.get(fieldName);
+        } else {
+            throw new InvalidObjectException(String.format("Found field of type %s, expected %s field.%n", field.getClass(), ArrayField.class));
+        }
+    }
+
+
+    public SingleField<String> getNameField() throws InvalidObjectException {
+        return getSingleStringField(FieldName.NAME);
     }
 
     public void checkFields() {

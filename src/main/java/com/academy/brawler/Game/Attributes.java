@@ -1,5 +1,6 @@
 package com.academy.brawler.Game;
 
+import com.academy.brawler.Game.Items.Fields.Field;
 import com.academy.brawler.Game.Items.Types.Weapons.WeaponType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -30,6 +31,13 @@ public class Attributes {
         attributeMap.put(WeaponType.SPEAR.value(), 0);
         attributeMap.put(WeaponType.SHIELD.value(), 0);
         attributeMap.put(WeaponType.MACE.value(), 0);
+    }
+
+    public boolean isValid(){
+        attributeMap.forEach((name, value) -> {
+            Field.checkValueNotNegative(name, value);
+        });
+        return true;
     }
 
     public int getHealth() {

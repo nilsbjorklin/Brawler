@@ -1,22 +1,43 @@
 package com.academy.brawler.Game.Items.Types.Weapons;
 
 import com.academy.brawler.Game.Attributes;
-import com.academy.brawler.Game.Items.Fields.SingleField;
+import com.academy.brawler.Game.Items.Fields.Field;
 
+import java.io.InvalidObjectException;
+
+import static com.academy.brawler.Game.Items.Fields.Field.checkValueLarger;
+import static com.academy.brawler.Game.Items.Fields.Field.checkValueNotNegative;
 import static com.academy.brawler.Game.Items.Fields.FieldName.*;
 
 public class CreateWeapon {
     private Weapon weapon;
 
-    private void weaponConstructor(final WeaponType weaponType, final String weaponName, final String weaponDescription) {
-        SingleField<WeaponType> weaponTypeField = (SingleField<WeaponType>) weapon.getField(WEAPON_TYPE);
-        weaponTypeField.setValue(weaponType);
+    public CreateWeapon generate(final WeaponType weaponType, final String weaponName, final String weaponDescription, final boolean isTwoHanded) {
 
-        SingleField<String> nameField = (SingleField<String>) weapon.getField(NAME);
-        nameField.setValue(weaponName);
+        if (isTwoHanded) {
+            if (!weaponType.isTwoHanded()){
+                throw new IllegalArgumentException(String.format("Weapon '%s' is not allowed to be two handed.", weaponType.name()));
+            } else {
+                setTwoHandWeapon();
+            }
+        } else {
+            if(!weaponType.isOneHanded()){
+                throw new IllegalArgumentException(String.format("Weapon '%s' is not allowed to be one handed.", weaponType.name()));
+            } else {
+                setOneHandWeapon();
+            }
+        }
+        try {
+            weapon.getSingleWeaponTypeField(WEAPON_TYPE).setValue(weaponType);
+            weapon.getSingleStringField(NAME).setValue(weaponName);
+            weapon.getSingleStringField(DESCRIPTION).setValue(weaponDescription);
+        } catch (InvalidObjectException e) {
+            System.err.println(e.getLocalizedMessage());
+            e.printStackTrace();
+            return null;
+        }
 
-        SingleField<String> descriptionField = (SingleField<String>) weapon.getField(DESCRIPTION);
-        descriptionField.setValue(weaponDescription);
+        return this;
     }
 
     private void setOneHandWeapon() {
@@ -27,44 +48,41 @@ public class CreateWeapon {
         weapon = new TwoHandWeapon();
     }
 
-    public CreateWeapon CreateDagger(final String weaponName, final String weaponDescription) {
-        setOneHandWeapon();
-        weaponConstructor(WeaponType.DAGGER, weaponName, weaponDescription);
+    public CreateWeapon weight(final int weaponWeight) throws IllegalArgumentException, InvalidObjectException {
+        Field.checkValueNotNegative("Weapon weight", weaponWeight);
+        weapon.getSingleIntegerField(WEIGHT).setValue(weaponWeight);
         return this;
     }
 
-    public CreateWeapon weight(final int weaponWeight) {
-        SingleField<Integer> field = (SingleField<Integer>) weapon.getField(WEIGHT);
-        field.setValue(weaponWeight);
+    public CreateWeapon breakValue(final int weaponBreakValue) throws IllegalArgumentException, InvalidObjectException {
+        Field.checkValueNotNegative("Weapon break value", weaponBreakValue);
+        weapon.getSingleIntegerField(BREAK_VALUE).setValue(weaponBreakValue);
         return this;
     }
 
-    public CreateWeapon breakValue(final int weaponBreakValue) {
-        SingleField<Integer> field = (SingleField<Integer>) weapon.getField(BREAK_VALUE);
-        field.setValue(weaponBreakValue);
-        return this;
-    }
+    public CreateWeapon damage(final int minDamage, final int maxDamage, final int damageCeiling) throws IllegalArgumentException, InvalidObjectException {
+        checkValueNotNegative("Min damage", minDamage);
+        checkValueNotNegative("Max damage", maxDamage);
+        checkValueNotNegative("Damage ceiling", damageCeiling);
+        checkValueLarger("Min damage", minDamage, "Max damage", maxDamage);
+        checkValueLarger("Max damage", maxDamage, "Damage ceiling", damageCeiling);
 
-    public CreateWeapon damage(final int minDamage, final int maxDamage, final int damageCeiling) {
-        SingleField<Integer> minDamageField = (SingleField<Integer>) weapon.getField(MIN_DAMAGE);
-        minDamageField.setValue(minDamage);
-        SingleField<Integer> maxDamageField = (SingleField<Integer>) weapon.getField(MAX_DAMAGE);
-        maxDamageField.setValue(maxDamage);
-        SingleField<Integer> damageCeilingField = (SingleField<Integer>) weapon.getField(DAMAGE_CEILING);
-        damageCeilingField.setValue(damageCeiling);
+        weapon.getSingleIntegerField(MIN_DAMAGE).setValue(minDamage);
+        weapon.getSingleIntegerField(MAX_DAMAGE).setValue(maxDamage);
+        weapon.getSingleIntegerField(DAMAGE_CEILING).setValue(damageCeiling);
 
         return this;
     }
 
-    public CreateWeapon requirements(final Attributes weaponRequirements) {
-        SingleField<Attributes> attributes = (SingleField<Attributes>) weapon.getField(REQUIREMENTS);
-        attributes.setValue(weaponRequirements);
+    public CreateWeapon requirements(final Attributes weaponRequirements) throws InvalidObjectException, IllegalArgumentException {
+        weaponRequirements.isValid();
+        weapon.getSingleAttributesField(REQUIREMENTS).setValue(weaponRequirements);
         return this;
     }
 
-    public CreateWeapon attributes(final Attributes weaponAttributes) {
-        SingleField<Attributes> attributes = (SingleField<Attributes>) weapon.getField(ATTRIBUTES);
-        attributes.setValue(weaponAttributes);
+    public CreateWeapon attributes(final Attributes weaponAttributes) throws InvalidObjectException, IllegalArgumentException {
+        weaponAttributes.isValid();
+        weapon.getSingleAttributesField(ATTRIBUTES).setValue(weaponAttributes);
         return this;
     }
 
