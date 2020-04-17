@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <title>Login page</title>
+    <!--
+    <meta name="google-signin-client_id" content="YOUR_CLIENT_ID.apps.googleusercontent.com">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>-->
+</head>
+<body>
+<h1>Login page</h1>
+<p th:if="${loginError}" class="error">Wrong user or password</p>
+<form th:action="@{/login.html}" method="post">
+    <div><label> User Name : <input type="email" name="email" autofocus="autofocus"/> </label></div>
+    <div><label> Password: <input type="password" name="password"/> </label></div>
+    <div><input type="submit" value="Sign In"/></div>
+</form>
+</body>
+
+<script th:src="@{//script/another_template.js}"></script>
+</html>

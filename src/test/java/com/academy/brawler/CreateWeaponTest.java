@@ -1,9 +1,9 @@
 package com.academy.brawler;
 
-import com.academy.brawler.Game.Attributes;
-import com.academy.brawler.Game.Items.Types.Weapons.CreateWeapon;
-import com.academy.brawler.Game.Items.Types.Weapons.Weapon;
-import com.academy.brawler.Game.Items.Types.Weapons.WeaponType;
+import com.academy.brawler.game.Attributes;
+import com.academy.brawler.game.Items.Types.Weapons.CreateWeapon;
+import com.academy.brawler.game.Items.Types.Weapons.Weapon;
+import com.academy.brawler.game.Items.Types.Weapons.WeaponType;
 import junit.framework.TestCase;
 import org.junit.jupiter.api.Test;
 

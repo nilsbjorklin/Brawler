@@ -1,0 +1,2 @@
+{"email":"nils.bjorklin@gmail.com","hash":"$2a$10$3XxpC8iT9oGaODlXxtPCY.3q0SLhI/MlyjudYS7uNKjVfe/xQeYci","enabled":true,"account_non_locked":true,"roles":["ee11cbb1-9052-340b-87aa-c0ca060c23ee"]}
+{"email":"nils.bjorklin@22gmail.com","hash":"$2a$10$DXsb2LG4DuxdDipGRcukqeJ5nE4Kh0E8nrmKZd7GGTzwe51nggBem","enabled":true,"account_non_locked":true,"roles":["ee11cbb1-9052-340b-87aa-c0ca060c23ee"]}

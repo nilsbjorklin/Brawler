@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <title>Spring Security Example </title><!--
+    <meta name="google-signin-client_id" content="YOUR_CLIENT_ID.apps.googleusercontent.com">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>-->
+</head>
+<body>
+<h2>Register</h2>
+<p th:if="${registerError}" class="error">User already registered</p>
+<form th:action="@{/register.html}" method="post">
+    <div><label> User Name : <input type="email" name="email"/> </label></div>
+    <div><label> Password: <input type="password" name="password"/> </label></div>
+    <div><input type="submit" value="Register"/></div>
+</form>
+</body>
+
+<script th:src="@{//script/another_template.js}"></script>
+</html>
