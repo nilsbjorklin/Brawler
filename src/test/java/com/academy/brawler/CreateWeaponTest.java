@@ -2,7 +2,7 @@ package com.academy.brawler;
 
 import com.academy.brawler.game.Attributes;
 import com.academy.brawler.game.Items.Types.Weapons.CreateWeapon;
-import com.academy.brawler.game.Items.Types.Weapons.Weapon;
+import com.academy.brawler.game.Items.Types.Weapons.WeaponOrShield;
 import com.academy.brawler.game.Items.Types.Weapons.WeaponType;
 import junit.framework.TestCase;
 import org.junit.jupiter.api.Test;
@@ -26,17 +26,17 @@ public class CreateWeaponTest extends TestCase {
 
         for (WeaponType weaponType : WeaponType.values()) {
             if (weaponType.isOneHanded()) {
-                Weapon oneHand = testWeaponType(weaponType, false);
+                WeaponOrShield oneHand = testWeaponType(weaponType, false);
                 assertNotNull(oneHand);
             }
             if (weaponType.isTwoHanded()) {
-                Weapon twoHand = testWeaponType(weaponType, true);
+                WeaponOrShield twoHand = testWeaponType(weaponType, true);
                 assertNotNull(twoHand);
             }
         }
     }
 
-    public Weapon testWeaponType(final WeaponType weaponType, final boolean isTwoHanded) throws InvalidObjectException {
+    public WeaponOrShield testWeaponType(final WeaponType weaponType, final boolean isTwoHanded) throws InvalidObjectException {
         String weaponName = weaponType.name();
         String weaponDescription = weaponName + " description";
 

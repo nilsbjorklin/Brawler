@@ -2,6 +2,8 @@ package com.academy.brawler.game.Characters;
 
 import com.academy.brawler.game.Attributes;
 
+import java.io.InvalidObjectException;
+
 public class Gladiator implements Fighter {
     private String name;
     private Attributes attributes;
@@ -33,6 +35,11 @@ public class Gladiator implements Fighter {
     }
 
     @Override
+    public int getActionsPerTurn() throws InvalidObjectException {
+        return equipment.getActionsPerTurn();
+    }
+
+    @Override
     public int getCurrentHealth() {
         return currentHealth;
     }
@@ -40,5 +47,10 @@ public class Gladiator implements Fighter {
     @Override
     public void takeDamage(final int damage) {
         currentHealth -= damage;
+    }
+
+    @Override
+    public String damageText(int damage) {
+        return null;
     }
 }

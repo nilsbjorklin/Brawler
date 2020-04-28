@@ -4,7 +4,9 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.TreeMap;
 
 @Component
 public class LoggedInUsers {
@@ -37,20 +39,28 @@ public class LoggedInUsers {
             this.session = sessionObject;
         }
 
+        public String getRoles() {
+            if (user == null) {
+                return null;
+            } else {
+                return user.getRoleNames();
+            }
+        }
+
         public String getName() {
             return getEmail();
         }
 
         public String getEmail() {
-            return user.getEmail();
-        }
-
-        public String getPassword() {
-            return user.getPassword();
+            if (user == null) {
+                return null;
+            } else {
+                return user.getEmail();
+            }
         }
 
         public String getSessionId() {
             return session.getId();
-    }
+        }
     }
 }

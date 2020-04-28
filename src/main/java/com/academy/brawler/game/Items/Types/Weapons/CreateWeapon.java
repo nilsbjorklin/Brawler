@@ -10,53 +10,34 @@ import static com.academy.brawler.game.Items.Fields.Field.checkValueNotNegative;
 import static com.academy.brawler.game.Items.Fields.FieldName.*;
 
 public class CreateWeapon {
-    private Weapon weapon;
+    private WeaponOrShield weapon;
 
-    public CreateWeapon generate(final WeaponType weaponType, final String weaponName, final String weaponDescription, final boolean isTwoHanded) {
+    public CreateWeapon generate(final WeaponType weaponType, final String weaponName, final String weaponDescription, final boolean isTwoHanded) throws InvalidObjectException {
 
         if (isTwoHanded) {
-            if (!weaponType.isTwoHanded()){
-                throw new IllegalArgumentException(String.format("Weapon '%s' is not allowed to be two handed.", weaponType.name()));
-            } else {
-                setTwoHandWeapon();
-            }
+            weapon = WeaponOrShield.twoHandWeapon(weaponType, weaponName, weaponDescription);
         } else {
-            if(!weaponType.isOneHanded()){
-                throw new IllegalArgumentException(String.format("Weapon '%s' is not allowed to be one handed.", weaponType.name()));
-            } else {
-                setOneHandWeapon();
-            }
-        }
-        try {
-            weapon.getSingleWeaponTypeField(WEAPON_TYPE).setValue(weaponType);
-            weapon.getSingleStringField(NAME).setValue(weaponName);
-            weapon.getSingleStringField(DESCRIPTION).setValue(weaponDescription);
-        } catch (InvalidObjectException e) {
-            System.err.println(e.getLocalizedMessage());
-            e.printStackTrace();
-            return null;
+            weapon = WeaponOrShield.oneHandWeapon(weaponType, weaponName, weaponDescription);
         }
 
         return this;
     }
 
-    private void setOneHandWeapon() {
-        weapon = new OneHandWeapon();
-    }
-
-    private void setTwoHandWeapon() {
-        weapon = new TwoHandWeapon();
-    }
-
     public CreateWeapon weight(final int weaponWeight) throws IllegalArgumentException, InvalidObjectException {
         Field.checkValueNotNegative("Weapon weight", weaponWeight);
-        weapon.getSingleIntegerField(WEIGHT).setValue(weaponWeight);
+        weapon.setSingleField(WEIGHT, weaponWeight);
         return this;
     }
 
     public CreateWeapon breakValue(final int weaponBreakValue) throws IllegalArgumentException, InvalidObjectException {
         Field.checkValueNotNegative("Weapon break value", weaponBreakValue);
-        weapon.getSingleIntegerField(BREAK_VALUE).setValue(weaponBreakValue);
+        weapon.setSingleField(BREAK_VALUE, weaponBreakValue);
+        return this;
+    }
+
+    public CreateWeapon actions(final int actions) throws IllegalArgumentException, InvalidObjectException {
+        Field.checkValueNotNegative("Actions", actions);
+        weapon.setSingleField(ACTIONS, actions);
         return this;
     }
 
@@ -67,26 +48,26 @@ public class CreateWeapon {
         checkValueLarger("Min damage", minDamage, "Max damage", maxDamage);
         checkValueLarger("Max damage", maxDamage, "Damage ceiling", damageCeiling);
 
-        weapon.getSingleIntegerField(MIN_DAMAGE).setValue(minDamage);
-        weapon.getSingleIntegerField(MAX_DAMAGE).setValue(maxDamage);
-        weapon.getSingleIntegerField(DAMAGE_CEILING).setValue(damageCeiling);
+        weapon.setSingleField(MIN_DAMAGE, 0);
+        weapon.setSingleField(MAX_DAMAGE, 0);
+        weapon.setSingleField(DAMAGE_CEILING, 0);
 
         return this;
     }
 
     public CreateWeapon requirements(final Attributes weaponRequirements) throws InvalidObjectException, IllegalArgumentException {
         weaponRequirements.isValid();
-        weapon.getSingleAttributesField(REQUIREMENTS).setValue(weaponRequirements);
+        weapon.setSingleField(REQUIREMENTS, weaponRequirements);
         return this;
     }
 
     public CreateWeapon attributes(final Attributes weaponAttributes) throws InvalidObjectException, IllegalArgumentException {
         weaponAttributes.isValid();
-        weapon.getSingleAttributesField(ATTRIBUTES).setValue(weaponAttributes);
+        weapon.setSingleField(ATTRIBUTES, weaponAttributes);
         return this;
     }
 
-    public Weapon build() {
+    public WeaponOrShield build() {
         weapon.checkFields();
         return weapon;
     }

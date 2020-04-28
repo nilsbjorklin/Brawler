@@ -1,31 +1,50 @@
 package com.academy.brawler.game.Characters;
 
+import com.academy.brawler.game.Items.Fields.FieldName;
 import com.academy.brawler.game.Items.Item;
 import com.academy.brawler.game.Items.ItemSlot;
 import com.academy.brawler.game.Items.Types.Armor;
-import com.academy.brawler.game.Items.Types.Shield;
-import com.academy.brawler.game.Items.Types.Weapons.Weapon;
+import com.academy.brawler.game.Items.Types.Weapons.WeaponOrShield;
+
+import java.io.InvalidObjectException;
+import java.util.List;
 
 public class Equipment {
-    private Weapon mainHand;
-    private Shield shield;
-    private Weapon offHand;
+    private WeaponOrShield mainHand;
+    private WeaponOrShield offHand;
+
     private Armor armor;
     private Item[] trinkets = new Item[2];
 
+
     public Equipment() {
+
     }
 
-    public Weapon getMainHand() {
+    public int getActionsPerTurn() throws InvalidObjectException {
+        return mainHand.getSingleField(FieldName.ACTIONS, 0).getValue() + offHand.getSingleField(FieldName.ACTIONS, 0).getValue();
+    }
+
+    public void setMainHand(final WeaponOrShield weaponOrShield) throws InvalidObjectException {
+        List<ItemSlot> itemSlots = weaponOrShield.getArrayField(FieldName.ITEM_SLOTS, ItemSlot.MAIN_HAND).getValues();
+        if (itemSlots.contains(ItemSlot.MAIN_HAND)) {
+            this.mainHand = weaponOrShield;
+        }
+    }
+
+    public void setOffHand(final WeaponOrShield weaponOrShield) throws InvalidObjectException {
+        List<ItemSlot> itemSlots = weaponOrShield.getArrayField(FieldName.ITEM_SLOTS, ItemSlot.OFF_HAND).getValues();
+        if (itemSlots.contains(ItemSlot.OFF_HAND)) {
+            this.mainHand = weaponOrShield;
+        }
+    }
+
+    public WeaponOrShield getMainHand() {
         return mainHand;
     }
 
-    public Weapon getOffHand() {
+    public WeaponOrShield getOffHand() {
         return offHand;
-    }
-
-    public Shield getShield() {
-        return shield;
     }
 
     public Armor getArmor() {
@@ -36,32 +55,14 @@ public class Equipment {
         return trinkets;
     }
 
-    public void setMainHand(final Weapon mainHandItem) {
-        if (mainHandItem.itemMatchesItemSlots(ItemSlot.MAIN_HAND)){
-            this.mainHand = mainHandItem;
-        }
-    }
-
-    public void setOffHand(final Weapon offHandItem) {
-        if (offHandItem.itemMatchesItemSlots(ItemSlot.OFF_HAND)){
-            this.offHand = offHandItem;
-        }
-    }
-
-    public void setOffHand(final Shield shield) {
-        if (shield.itemMatchesItemSlots(ItemSlot.OFF_HAND)){
-            this.shield = shield;
-        }
-    }
-
-    public void setArmor(final Armor armorItem) {
-        if (armorItem.itemMatchesItemSlots(ItemSlot.BODY)){
+    public void setArmor(final Armor armorItem) throws InvalidObjectException {
+        if (armorItem.itemMatchesItemSlots(ItemSlot.BODY)) {
             this.armor = armorItem;
         }
     }
 
-    public void setTrinket(final Item trinketItem, final int trinketNumber) {
-        if (trinketItem.itemMatchesItemSlots(ItemSlot.TRINKET)){
+    public void setTrinket(final Item trinketItem, final int trinketNumber) throws InvalidObjectException {
+        if (trinketItem.itemMatchesItemSlots(ItemSlot.TRINKET)) {
             this.trinkets[trinketNumber] = trinketItem;
         }
     }

@@ -2,6 +2,8 @@ package com.academy.brawler.game.Characters;
 
 import com.academy.brawler.game.Attributes;
 
+import java.io.InvalidObjectException;
+
 public class Beast implements Fighter {
     private String name;
     private Attributes attributes;
@@ -25,6 +27,11 @@ public class Beast implements Fighter {
     @Override
     public Attributes getAttributes() {
         return attributes;
+    }
+
+    @Override
+    public int getActionsPerTurn() throws InvalidObjectException {
+        return equipment.getActionsPerTurn();
     }
 
     @Override

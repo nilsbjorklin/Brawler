@@ -20,21 +20,24 @@ public class SiteController {
     @GetMapping({"/index.html", "/index", "/"})
     public String indexPage(final Model model, final HttpServletRequest httpServletRequest) {
         List<LoggedInUsers.User> allUsers = users.getAllUsers();
-        System.out.println("All users size: " + allUsers.size());
+        model.addAttribute("loggedIn", false);
+        System.out.println("user is: " + httpServletRequest.getRemoteUser());
+        if (httpServletRequest.getRemoteUser() != null){
+            System.out.println("returning loggedIn=true");
+            model.addAttribute("loggedIn", true);
+        }
         model.addAttribute("users", allUsers);
         return "index";
     }
 
     @GetMapping({"/logged-in.html", "/logged-in"})
     public String logInRedirect(final Model model, final HttpServletRequest httpServletRequest) throws IOException, Exceptions.JsonToUserException {
-        System.out.println("logged in");
         users.login(httpServletRequest.getSession(), httpServletRequest.getRemoteUser());
         return indexPage(model, httpServletRequest);
     }
 
     @GetMapping({"/logged-out.html", "/logged-out"})
     public String logOutRedirect(final Model model, final HttpServletRequest httpServletRequest) {
-        System.out.println("logged out");
         users.logout(httpServletRequest.getSession());
         return indexPage(model, httpServletRequest);
     }

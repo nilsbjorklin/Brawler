@@ -1,7 +1,7 @@
 package com.academy.brawler.game.Items.Types.Weapons;
 
 public enum WeaponType {
-    SWORD("sword", true, true), DAGGER("dagger", true, false), AXE("axe", true, true), SPEAR("spear", false, true), SHIELD("shield", true, false), MACE("mace", true, true);
+    FIST("fist", true, false), SWORD("sword", true, true), DAGGER("dagger", true, false), AXE("axe", true, true), SPEAR("spear", false, true), SHIELD("shield", true, false), MACE("mace", true, true);
     private String weaponValue;
     private boolean oneHanded;
     private boolean twoHanded;

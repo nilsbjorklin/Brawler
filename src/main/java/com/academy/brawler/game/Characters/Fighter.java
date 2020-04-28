@@ -2,10 +2,13 @@ package com.academy.brawler.game.Characters;
 
 import com.academy.brawler.game.Attributes;
 
+import java.io.InvalidObjectException;
+
 public interface Fighter {
     String getName();
     Attributes getAttributes();
     Equipment getEquipment();
+    int getActionsPerTurn() throws InvalidObjectException;
 
     int getCurrentHealth();
 

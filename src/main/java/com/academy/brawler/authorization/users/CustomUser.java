@@ -9,8 +9,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.Collection;
+import java.util.stream.Collectors;
+
+import static com.academy.brawler.authorization.users.Roles.getRoleFromAuthority;
 
 public class CustomUser implements UserDetails {
     private static final ObjectMapper mapper = new ObjectMapper();
@@ -40,7 +42,7 @@ public class CustomUser implements UserDetails {
         if (jsonRoles.isArray()) {
             int arrSize = jsonRoles.size();
             for (int i = 0; i < arrSize; i++) {
-                user.addRole(Roles.getRoleFromAuthority(jsonRoles.get(i)
+                user.addRole(getRoleFromAuthority(jsonRoles.get(i)
                         .textValue()));
             }
         } else {
@@ -118,12 +120,15 @@ public class CustomUser implements UserDetails {
         locked = false;
     }
 
-    public JsonNode asJson() throws Exceptions.UserToJsonException {
+    public String getRoleNames() {
+        return "[" + roles.stream().map(grantedAuthority -> getRoleFromAuthority(grantedAuthority.getAuthority()).getName()).collect(Collectors.joining(", ")) + "]";
+    }
+
+    public ArrayNode getRolesAsJson() throws Exceptions.UserToJsonException {
         ArrayNode rolesArray = mapper.createArrayNode();
         if (getAuthorities() == null || getAuthorities().size() == 0) {
             throw new NullPointerException("RoleList is null or empty");
         }
-
         for (final GrantedAuthority role : getAuthorities()) {
             if (role != null) {
                 rolesArray.add(role.getAuthority());
@@ -132,6 +137,10 @@ public class CustomUser implements UserDetails {
             }
         }
 
+        return rolesArray;
+    }
+
+    public JsonNode asJson() throws Exceptions.UserToJsonException {
         if (email == null || email.length() == 0) {
             throw new Exceptions.UserToJsonException("Email is null or empty");
         }
@@ -143,7 +152,7 @@ public class CustomUser implements UserDetails {
                 .put("hash", getPassword())
                 .put("enabled", isEnabled())
                 .put("account_non_locked", isAccountNonLocked())
-                .set("roles", rolesArray);
+                .set("roles", getRolesAsJson());
     }
 
     public String formatForFile() throws Exceptions.UserToJsonException {
