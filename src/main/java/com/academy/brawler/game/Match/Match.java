@@ -66,7 +66,7 @@ public class Match {
 
         @Override
         public int compare(Fighter first, Fighter second) {
-            return second.getAttributes().getInitiative() - first.getAttributes().getInitiative();
+            return second.getInitiative() - first.getInitiative();
         }
     }
 }

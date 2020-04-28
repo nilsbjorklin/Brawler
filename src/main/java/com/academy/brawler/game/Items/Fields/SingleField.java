@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class SingleField<Type> extends Field {
     private Type value;
-    private Type defaulValue;
+    private Type defaultValue;
 
     public SingleField(final FieldName fieldName, final boolean fieldRequired) {
         super(fieldName, fieldRequired);
@@ -12,13 +12,13 @@ public class SingleField<Type> extends Field {
 
     public SingleField(final FieldName fieldName, final Type fieldDefaultValue) {
         super(fieldName, true);
-        this.defaulValue = fieldDefaultValue;
+        this.defaultValue = fieldDefaultValue;
     }
 
     public Type getValue() {
         if (isValid()) {
-            if (value == null && defaulValue != null) {
-                return defaulValue;
+            if (value == null && defaultValue != null) {
+                return defaultValue;
             } else {
                 return value;
             }
@@ -37,8 +37,8 @@ public class SingleField<Type> extends Field {
         ObjectNode node = getMapper().createObjectNode();
         node.put("name", getName().name());
         node.put("required", isRequired());
-        if (defaulValue != null){
-            node.put("defaultValue", defaulValue.toString());
+        if (defaultValue != null){
+            node.put("defaultValue", defaultValue.toString());
         }
         if (value != null){
             node.put("value", value.toString());
@@ -49,7 +49,7 @@ public class SingleField<Type> extends Field {
 
     @Override
     public boolean isValid() {
-        return !(isRequired() && value == null && defaulValue == null);
+        return !(isRequired() && value == null && defaultValue == null);
     }
 
     @Override

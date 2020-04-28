@@ -12,7 +12,7 @@ public class Armor extends Item {
 
     public Armor() throws InvalidObjectException {
         super();
-        createSingleField(FieldName.ABSORBTION, true, Integer.class);
+        createSingleField(FieldName.ABSORPTION, true, Integer.class);
 
         addArrayField(ITEM_SLOTS, ItemSlot.BODY);
     }

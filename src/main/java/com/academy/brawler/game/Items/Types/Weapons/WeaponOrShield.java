@@ -21,7 +21,7 @@ public class WeaponOrShield extends Item {
 
     public static WeaponOrShield shield(final String shieldName, final String shieldDescription) throws InvalidObjectException {
         WeaponOrShield shield = new WeaponOrShield(shieldName, shieldDescription);
-        shield.createSingleField(ABSORBTION, true, 0);
+        shield.createSingleField(ABSORPTION, true, 0);
         shield.createSingleField(BREAK_VALUE, true, 0);
 
         shield.addArrayField(ITEM_SLOTS, ItemSlot.OFF_HAND);
@@ -68,6 +68,7 @@ public class WeaponOrShield extends Item {
 
 
     private static int getRandomNumberInRange(final int min, final int max) {
+        System.out.printf("trying to generate value between %s and %s.", min, max );
 
         if (min >= max) {
             throw new IllegalArgumentException("max must be greater than min");

@@ -23,7 +23,7 @@ public class CombatText {
     }
 
     static String combatAttack(final Fighter attacker, final Fighter defender, final WeaponOrShield weapon) throws InvalidObjectException {
-        final int damage = weapon.generateHit(attacker.getAttributes().getStrength()) - defender.getEquipment().getArmor().getSingleField(FieldName.ABSORBTION, 0).getValue();
+        int damage = 15;
         if (damage <= 0) {
             return String.format("%s failed to dodge or parry the attack and but the hit is absorbed by %s.", defender.getName(), defender.getEquipment().getArmor().getSingleField(FieldName.NAME, "").getValue());
         } else {
@@ -33,9 +33,9 @@ public class CombatText {
 
     static String combatForfeit(final Fighter defender, final int currentDamageTaken) {
         String reason = "chooses to give up";
-        if (currentDamageTaken > defender.getAttributes().getHealth() + 15) {
+        if (currentDamageTaken > defender.getHealth() + 15) {
             reason = "is killed.";
-        } else if (currentDamageTaken > defender.getAttributes().getHealth()) {
+        } else if (currentDamageTaken > defender.getHealth()) {
             reason = "is sent to the infirmary.";
         }
         return String.format("%s has taken to much damage and ", defender.getName());
